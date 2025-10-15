@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="generator" content="Observable Framework v1.13.3">
+<title>JADB: Interactive Timelines | Swedish Job Market History</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&amp;display=swap" crossorigin>
+<link rel="preload" as="style" href="./_import/custom-style.19cb0090.css">
+<link rel="preload" as="style" href="./_observablehq/stdlib/inputs.ea9fd553.css">
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&amp;display=swap" crossorigin>
+<link rel="stylesheet" type="text/css" href="./_import/custom-style.19cb0090.css">
+<link rel="stylesheet" type="text/css" href="./_observablehq/stdlib/inputs.ea9fd553.css">
+<link rel="modulepreload" href="./_observablehq/client.5d071151.js">
+<link rel="modulepreload" href="./_observablehq/runtime.e080113b.js">
+<link rel="modulepreload" href="./_observablehq/stdlib.73a8ec5a.js">
+<link rel="modulepreload" href="./_npm/@observablehq/plot@0.6.17/d761ef9b.js">
+<link rel="modulepreload" href="./_npm/htl@0.3.1/72f4716c.js">
+<link rel="modulepreload" href="./_observablehq/stdlib/inputs.4ef1d259.js">
+<link rel="modulepreload" href="./_npm/d3-dsv@3.0.1/9cffc2bd.js">
+<link rel="modulepreload" href="./_npm/isoformat@0.2.1/18cbf477.js">
+<link rel="modulepreload" href="./_npm/d3@7.9.0/e780feca.js">
+<link rel="modulepreload" href="./_npm/interval-tree-1d@1.0.4/53fe8176.js">
+<link rel="modulepreload" href="./_npm/d3-array@3.2.4/e93ca09f.js">
+<link rel="modulepreload" href="./_npm/d3-axis@3.0.0/0f2de24d.js">
+<link rel="modulepreload" href="./_npm/d3-brush@3.0.0/65eb105b.js">
+<link rel="modulepreload" href="./_npm/d3-chord@3.0.1/7ef8fb2e.js">
+<link rel="modulepreload" href="./_npm/d3-color@3.1.0/aeb57b94.js">
+<link rel="modulepreload" href="./_npm/d3-contour@4.0.2/1d2aed74.js">
+<link rel="modulepreload" href="./_npm/d3-delaunay@6.0.4/5ced1d52.js">
+<link rel="modulepreload" href="./_npm/d3-dispatch@3.0.1/9ba9c7f3.js">
+<link rel="modulepreload" href="./_npm/d3-drag@3.0.0/4202580c.js">
+<link rel="modulepreload" href="./_npm/d3-ease@3.0.1/cdd7e898.js">
+<link rel="modulepreload" href="./_npm/d3-fetch@3.0.1/b4e2ad9a.js">
+<link rel="modulepreload" href="./_npm/d3-force@3.0.0/5e804d15.js">
+<link rel="modulepreload" href="./_npm/d3-format@3.1.0/86074ef6.js">
+<link rel="modulepreload" href="./_npm/d3-geo@3.1.1/40599fb3.js">
+<link rel="modulepreload" href="./_npm/d3-hierarchy@3.1.2/e49e792c.js">
+<link rel="modulepreload" href="./_npm/d3-interpolate@3.0.1/8d1e5425.js">
+<link rel="modulepreload" href="./_npm/d3-path@3.1.0/20d3f133.js">
+<link rel="modulepreload" href="./_npm/d3-polygon@3.0.1/7553081f.js">
+<link rel="modulepreload" href="./_npm/d3-quadtree@3.0.1/0dfd751c.js">
+<link rel="modulepreload" href="./_npm/d3-random@3.0.1/3c90ee06.js">
+<link rel="modulepreload" href="./_npm/d3-scale@4.0.2/843b6a76.js">
+<link rel="modulepreload" href="./_npm/d3-scale-chromatic@3.1.0/ba24c2e7.js">
+<link rel="modulepreload" href="./_npm/d3-selection@3.0.0/4d94e5b7.js">
+<link rel="modulepreload" href="./_npm/d3-shape@3.2.0/6d3a6726.js">
+<link rel="modulepreload" href="./_npm/d3-time@3.1.0/9f03c579.js">
+<link rel="modulepreload" href="./_npm/d3-time-format@4.1.0/07c9626f.js">
+<link rel="modulepreload" href="./_npm/d3-timer@3.0.1/b58a267d.js">
+<link rel="modulepreload" href="./_npm/d3-transition@3.0.1/004da2ac.js">
+<link rel="modulepreload" href="./_npm/d3-zoom@3.0.0/b5786b3f.js">
+<link rel="modulepreload" href="./_npm/binary-search-bounds@2.0.5/cbf6ba23.js">
+<link rel="modulepreload" href="./_npm/internmap@2.0.3/e08981d9.js">
+<link rel="modulepreload" href="./_npm/delaunator@5.0.1/02d43215.js">
+<link rel="modulepreload" href="./_npm/robust-predicates@3.0.2/aa00730b.js">
+<script type="module">
+
+import {define} from "./_observablehq/client.5d071151.js";
+import {registerFile} from "./_observablehq/stdlib.73a8ec5a.js";
+
+registerFile("./data/af_stockholm.csv", {"name":"./data/af_stockholm.csv","mimeType":"text/csv","path":"./_file/data/af_stockholm.4b9efe5e.csv","lastModified":1760477144276,"size":1595});
+registerFile("./data/dn_circulation.csv", {"name":"./data/dn_circulation.csv","mimeType":"text/csv","path":"./_file/data/dn_circulation.2ef032ee.csv","lastModified":1760477144269,"size":1320});
+registerFile("./data/dn_pages.csv", {"name":"./data/dn_pages.csv","mimeType":"text/csv","path":"./_file/data/dn_pages.83113750.csv","lastModified":1760477144275,"size":1374});
+registerFile("./data/dn_price.csv", {"name":"./data/dn_price.csv","mimeType":"text/csv","path":"./_file/data/dn_price.bae2061c.csv","lastModified":1760477144270,"size":1330});
+registerFile("./data/hisco_dn_gender.csv", {"name":"./data/hisco_dn_gender.csv","mimeType":"text/csv","path":"./_file/data/hisco_dn_gender.66a475e2.csv","lastModified":1760477143822,"size":14194});
+registerFile("./data/hisco_dn_pages.csv", {"name":"./data/hisco_dn_pages.csv","mimeType":"text/csv","path":"./_file/data/hisco_dn_pages.320bcfb6.csv","lastModified":1760477143884,"size":1445});
+registerFile("./data/scb_population.csv", {"name":"./data/scb_population.csv","mimeType":"text/csv","path":"./_file/data/scb_population.e407aeea.csv","lastModified":1760524541301,"size":834});
+
+define({id: "970f4173", outputs: ["Plot"], body: async () => {
+const Plot = await import("./_npm/@observablehq/plot@0.6.17/d761ef9b.js");
+
+return {Plot};
+}});
+
+define({id: "d57d8fa4", inputs: ["FileAttachment"], outputs: ["hisco_dn_gender","hisco_dn_pages","dn_circulation","dn_price","dn_pages","af_stockholm","scb_population"], body: async (FileAttachment) => {
+// Load all data files
+const hisco_dn_gender = await FileAttachment("./data/hisco_dn_gender.csv").csv({typed: true});
+const hisco_dn_pages = await FileAttachment("./data/hisco_dn_pages.csv").csv({typed: true});
+const dn_circulation = await FileAttachment("./data/dn_circulation.csv").csv({typed: true});
+const dn_price = await FileAttachment("./data/dn_price.csv").csv({typed: true});
+const dn_pages = await FileAttachment("./data/dn_pages.csv").csv({typed: true});
+const af_stockholm = await FileAttachment("./data/af_stockholm.csv").csv({typed: true});
+const scb_population = await FileAttachment("./data/scb_population.csv").csv({typed: true});
+return {hisco_dn_gender,hisco_dn_pages,dn_circulation,dn_price,dn_pages,af_stockholm,scb_population};
+}});
+
+define({id: "d2db8ce5", inputs: ["view","Inputs"], outputs: ["startYear"], body: (view,Inputs) => {
+const startYear = view(Inputs.range(
+  [1850, 2025],
+  {
+    label: "Start Year",
+    value: 1870,
+    step: 1
+  }
+));
+return {startYear};
+}});
+
+define({id: "e1a1be69", inputs: ["view","Inputs"], outputs: ["endYear"], body: (view,Inputs) => {
+const endYear = view(Inputs.range(
+  [1850, 2025],
+  {
+    label: "End Year",
+    value: 1970,
+    step: 1
+  }
+));
+return {endYear};
+}});
+
+define({id: "b93b3c9c", inputs: ["hisco_dn_gender","startYear","endYear","hisco_dn_pages","dn_circulation","dn_price","dn_pages","af_stockholm","scb_population"], outputs: ["hisco_dn_gender_filtered","hisco_dn_pages_filtered","dn_circulation_filtered","dn_price_filtered","dn_pages_filtered","af_stockholm_filtered","scb_population_filtered"], body: (hisco_dn_gender,startYear,endYear,hisco_dn_pages,dn_circulation,dn_price,dn_pages,af_stockholm,scb_population) => {
+// Filter all data sources by selected year range
+const hisco_dn_gender_filtered = hisco_dn_gender.filter(d => d.year >= startYear && d.year <= endYear);
+const hisco_dn_pages_filtered = hisco_dn_pages.filter(d => d.year >= startYear && d.year <= endYear);
+const dn_circulation_filtered = dn_circulation.filter(d => d.year >= startYear && d.year <= endYear);
+const dn_price_filtered = dn_price.filter(d => d.year >= startYear && d.year <= endYear);
+const dn_pages_filtered = dn_pages.filter(d => d.year >= startYear && d.year <= endYear);
+const af_stockholm_filtered = af_stockholm.filter(d => d.year >= startYear && d.year <= endYear);
+const scb_population_filtered = scb_population.filter(d => d.year >= startYear && d.year <= endYear);
+return {hisco_dn_gender_filtered,hisco_dn_pages_filtered,dn_circulation_filtered,dn_price_filtered,dn_pages_filtered,af_stockholm_filtered,scb_population_filtered};
+}});
+
+define({id: "57d30f18", inputs: ["view","Inputs","hitsJobsSelection","hisco_dn_gender_filtered","colors","af_stockholm_filtered","scb_population_filtered","pagesSelection","hisco_dn_pages_filtered","dn_pages_filtered","circulationPriceSelection","dn_circulation_filtered","dn_price_filtered","downloadChartAsPNG","downloadCSV","downloadBibTeX","alert"], outputs: ["downloadAllPanels"], body: (view,Inputs,hitsJobsSelection,hisco_dn_gender_filtered,colors,af_stockholm_filtered,scb_population_filtered,pagesSelection,hisco_dn_pages_filtered,dn_pages_filtered,circulationPriceSelection,dn_circulation_filtered,dn_price_filtered,downloadChartAsPNG,downloadCSV,downloadBibTeX,alert) => {
+const downloadAllPanels = view(Inputs.button("📦 Download All Panels (9 files)", {
+  reduce: () => {
+    // Collect all data and series for each panel
+    const panel1Data = [];
+    const panel1Series = [];
+    const panel2Data = [];
+    const panel2Series = [];
+    const panel3Data = [];
+    const panel3Series = [];
+
+    // Panel 1 data
+    hitsJobsSelection.forEach(series => {
+      const gender = series.id.includes("male") && !series.id.includes("female") ? "male" :
+                     series.id.includes("female") ? "female" :
+                     series.id.includes("both") ? "both" : null;
+
+      if (series.id.includes("hits") && gender) {
+        const data = hisco_dn_gender_filtered.filter(d => d.gender === gender).map(d => ({
+          year: d.year,
+          value: d.count,
+          series: series.name,
+          color: colors[series.id]
+        }));
+        panel1Data.push(...data);
+        panel1Series.push(series.name);
+      } else if (series.id.includes("apps") || series.id.includes("vaca")) {
+        const field = series.id === "male_apps" ? "male_apps" :
+                      series.id === "male_vaca" ? "male_vaca" :
+                      series.id === "female_apps" ? "female_apps" : "female_vaca";
+        const data = af_stockholm_filtered.map(d => ({
+          year: d.year,
+          value: d[field],
+          series: series.name,
+          color: colors[series.id]
+        }));
+        panel1Data.push(...data);
+        panel1Series.push(series.name);
+      } else if (series.id.includes("stockholm")) {
+        const field = series.id === "stockholm_city" ? "stockholm_city" : "stockholm_county";
+        const data = scb_population_filtered.map(d => ({
+          year: d.year,
+          value: d[field],
+          series: series.name,
+          color: colors[series.id]
+        }));
+        panel1Data.push(...data);
+        panel1Series.push(series.name);
+      }
+    });
+
+    // Panel 2 data
+    pagesSelection.forEach(series => {
+      if (series.id === "digitized_pages") {
+        const data = hisco_dn_pages_filtered.map(d => ({
+          year: d.year,
+          value: d.pages,
+          series: series.name,
+          color: colors[series.id]
+        }));
+        panel2Data.push(...data);
+        panel2Series.push(series.name);
+      } else if (series.id === "page_count_min") {
+        const data = dn_pages_filtered.map(d => ({
+          year: d.year,
+          value: d.pages_min,
+          series: series.name,
+          color: colors[series.id]
+        }));
+        panel2Data.push(...data);
+        panel2Series.push(series.name);
+      } else if (series.id === "page_count_max") {
+        const data = dn_pages_filtered.map(d => ({
+          year: d.year,
+          value: d.pages_max,
+          series: series.name,
+          color: colors[series.id]
+        }));
+        panel2Data.push(...data);
+        panel2Series.push(series.name);
+      }
+    });
+
+    // Panel 3 data
+    if (circulationPriceSelection.includes("circulation")) {
+      const data = dn_circulation_filtered.map(d => ({
+        year: d.year,
+        value: d.circulation,
+        series: "Circulation",
+        color: colors.circulation
+      }));
+      panel3Data.push(...data);
+      panel3Series.push("Circulation");
+    }
+    if (circulationPriceSelection.includes("price")) {
+      const data = dn_price_filtered.map(d => ({
+        year: d.year,
+        value: d.price,
+        series: "Price (öre)",
+        color: colors.price
+      }));
+      panel3Data.push(...data);
+      panel3Series.push("Price (öre)");
+    }
+
+    // Download all files with delays
+    let delay = 0;
+
+    // Panel 1 files (if data exists)
+    if (panel1Data.length > 0) {
+      const panel1Container = document.querySelectorAll('.panel-container')[0];
+      setTimeout(() => downloadChartAsPNG(panel1Container?.querySelector('[style*="relative"]'), "panel1_job_ads_employment.png"), delay);
+      delay += 200;
+      setTimeout(() => downloadCSV(panel1Data, "panel1_job_ads_employment.csv"), delay);
+      delay += 200;
+      setTimeout(() => downloadBibTeX(panel1Series, "panel1_job_ads_employment.bib"), delay);
+      delay += 200;
+    }
+
+    // Panel 2 files (if data exists)
+    if (panel2Data.length > 0) {
+      const panel2Container = document.querySelectorAll('.panel-container')[1];
+      setTimeout(() => downloadChartAsPNG(panel2Container?.querySelector('[style*="relative"]'), "panel2_digitized_pages.png"), delay);
+      delay += 200;
+      setTimeout(() => downloadCSV(panel2Data, "panel2_digitized_pages.csv"), delay);
+      delay += 200;
+      setTimeout(() => downloadBibTeX(panel2Series, "panel2_digitized_pages.bib"), delay);
+      delay += 200;
+    }
+
+    // Panel 3 files (if data exists)
+    if (panel3Data.length > 0) {
+      const panel3Container = document.querySelectorAll('.panel-container')[2];
+      setTimeout(() => downloadChartAsPNG(panel3Container?.querySelector('[style*="relative"]'), "panel3_circulation_price.png"), delay);
+      delay += 200;
+      setTimeout(() => downloadCSV(panel3Data, "panel3_circulation_price.csv"), delay);
+      delay += 200;
+      setTimeout(() => downloadBibTeX(panel3Series, "panel3_circulation_price.bib"), delay);
+    }
+
+    alert(`Downloading files from ${[panel1Data.length > 0, panel2Data.length > 0, panel3Data.length > 0].filter(Boolean).length} panels...`);
+  }
+}));
+return {downloadAllPanels};
+}});
+
+define({id: "e4f1338c", inputs: ["startYear","endYear","Plot","XMLSerializer","alert"], outputs: ["filterByGender","colors","globalXDomain","rule1906","label1906","chartWidth","chartHeight","margins","downloadChartAsPNG","downloadCSV","bibEntries","downloadBibTeX","downloadAll"], body: (startYear,endYear,Plot,XMLSerializer,alert) => {
+// Helper to filter by gender
+function filterByGender(data, gender) {
+  return data.filter(d => d.gender === gender);
+}
+
+// Color scheme
+const colors = {
+  male_hits: "#59a14f",
+  female_hits: "#e15759",
+  both_hits: "#f28e2c",
+  digitized_pages: "#4e79a7",
+  page_count_min: "#9c6644",
+  page_count_max: "#c85200",
+  male_apps: "#1f77b4",
+  male_vaca: "#aec7e8",
+  female_apps: "#ff7f0e",
+  female_vaca: "#ffbb78",
+  circulation: "#b07aa1",
+  price: "#ff9da7",
+  stockholm_city: "#76b7b2",
+  stockholm_county: "#af7aa1"
+};
+
+// Use the selected year range as the global X-axis domain
+const globalXDomain = [startYear, endYear];
+
+// Reference line for 1906
+const rule1906 = Plot.ruleX([1906], {stroke: "red", strokeDasharray: "4 4", strokeOpacity: 0.5});
+const label1906 = Plot.text([{year: 1906}], {
+  x: "year",
+  text: "1906",
+  dy: -10,
+  fill: "red",
+  fontSize: 10
+});
+
+const chartWidth = 800;
+const chartHeight = 500;
+const margins = {left: 80, right: 20, top: 20, bottom: 50};
+
+// Helper function to download all SVGs as high-resolution PNG
+function downloadChartAsPNG(container, filename) {
+  const svgs = container.querySelectorAll("svg");
+  if (svgs.length === 0) return;
+
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+
+  // High resolution: 2x scale
+  const scale = 2;
+  canvas.width = chartWidth * scale;
+  canvas.height = chartHeight * scale;
+
+  // Fill white background
+  ctx.fillStyle = "white";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Load and draw each SVG
+  let loadedCount = 0;
+  const images = [];
+
+  svgs.forEach((svg, index) => {
+    const svgData = new XMLSerializer().serializeToString(svg);
+    const img = new Image();
+    const blob = new Blob([svgData], {type: "image/svg+xml;charset=utf-8"});
+    const url = URL.createObjectURL(blob);
+
+    img.onload = function() {
+      images[index] = {img, url};
+      loadedCount++;
+
+      // When all images are loaded, draw them in order
+      if (loadedCount === svgs.length) {
+        images.forEach(({img, url}) => {
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          URL.revokeObjectURL(url);
+        });
+
+        canvas.toBlob(function(blob) {
+          const link = document.createElement("a");
+          link.download = filename;
+          link.href = URL.createObjectURL(blob);
+          link.click();
+        });
+      }
+    };
+
+    img.src = url;
+  });
+}
+
+// Helper function to download data as CSV
+function downloadCSV(data, filename) {
+  if (data.length === 0) {
+    alert("No data to export");
+    return;
+  }
+
+  // Get all unique keys from all objects (in case different series have different properties)
+  const allKeys = [...new Set(data.flatMap(obj => Object.keys(obj)))];
+
+  // Sort to ensure consistent column order: year, value, series, color
+  const headers = allKeys.sort((a, b) => {
+    const order = {year: 0, value: 1, series: 2, color: 3};
+    return (order[a] ?? 99) - (order[b] ?? 99);
+  });
+
+  const csvContent = [
+    headers.join(","),
+    ...data.map(row => headers.map(h => {
+      const val = row[h];
+      // Handle null/undefined and escape strings with commas
+      if (val === null || val === undefined) return "";
+      if (typeof val === "string" && val.includes(",")) return `"${val}"`;
+      return val;
+    }).join(","))
+  ].join("\n");
+
+  const blob = new Blob([csvContent], {type: "text/csv;charset=utf-8;"});
+  const link = document.createElement("a");
+  link.download = filename;
+  link.href = URL.createObjectURL(blob);
+  link.click();
+}
+
+// BibTeX entries for each data source
+const bibEntries = {
+  hisco: `@online{biblioteketsvenska,
+  title = {Svenska tidningar},
+  author = {{Kungliga biblioteket}},
+  url = {https://tidningar.kb.se/},
+  urldate = {2025-10-15},
+  abstract = {Utforska tusentals digitiserade tidningar och tidskrifter från 1645 fram till idag.},
+  langid = {swedish},
+  organization = {Svenska tidningar},
+}
+
+@misc{swedpop2022swedpop,
+  title = {{{SwedPop Documentation}}: {{HISCO}} Codes and Description},
+  shorttitle = {{{HISCO}} Codes},
+  author = {SwedPop},
+  date = {2022-07-04},
+  url = {https://swedpop.se/wp-content/uploads/2022/07/HISCO-codes-and-description-for-IDS-v2.pdf},
+  urldate = {2025-10-15},
+  langid = {english},
+}
+
+@misc{hisco_data_repo,
+  title = {HISCO Trend Notebook - Data Repository},
+  author = {JobAdsData},
+  url = {https://github.com/JobAdsData/HISCO_trend_notebook},
+  urldate = {2025-10-15},
+}`,
+
+  dn: `@online{2025svenska,
+  title = {Svenska Dagstidningar 1900--2025},
+  date = {2025-10-14},
+  url = {https://tidning.kb.se/nld/nld/tidning_all?tidnId=4},
+  urldate = {2025-10-14},
+  organization = {Nya Lundstedt Dagstidningar},
+}
+
+@misc{dn_data_repo,
+  title = {Nya Lundstedt Dagens Nyheter - Data Repository},
+  author = {JobAdsData},
+  url = {https://github.com/JobAdsData/nyalundstedt_DN},
+  urldate = {2025-10-15},
+}`,
+
+  af: `@book{StockholmsStad1924-1961,
+  author    = {{Stockholms stads statistiska kontor}},
+  title     = {Statistisk årsbok för Stockholms stad},
+  year      = {1924--1961},
+  address   = {Stockholm},
+  publisher = {{Stockholms stads statistiska kontor}}
+}
+
+@misc{af_data_repo,
+  title = {Arbetsförmedlingen Stockholm - Data Repository},
+  author = {JobAdsData},
+  url = {https://github.com/JobAdsData/arbetsformedlingen-sthlm},
+  urldate = {2025-10-15},
+}`,
+
+  scb: `@book{scb_historisk_1969,
+  author    = {{Statistiska centralbyrån}},
+  title     = {Historisk statistik för Sverige: Del 1, Befolkning},
+  edition   = {Andra},
+  publisher = {Statistiska centralbyrån},
+  year      = {1969},
+  address   = {Stockholm},
+  note      = {English title: Historical Statistics of Sweden. Part 1. Population. Second edition. 1720-1967},
+  url       = {https://share.scb.se/OV9993/Data/Historisk%20statistik/Historisk%20statistik%20f%C3%B6r%20Sverige%201700-1900-tal/Del1-Befolkning-1720-1967.pdf},
+  urldate   = {2025-10-15}
+}
+
+@misc{scb_data_repo,
+  title = {SCB Befolkning Stockholm - Data Repository},
+  author = {JobAdsData},
+  url = {https://github.com/JobAdsData/scb-befolkning-sthlm},
+  urldate = {2025-10-15},
+}`
+};
+
+// Helper function to download BibTeX citations for selected data sources
+function downloadBibTeX(seriesNames, filename) {
+  const citations = new Set();
+
+  // Determine which data sources are used based on series names
+  seriesNames.forEach(name => {
+    if (name.includes("Hits") || name.includes("HISCO") || name.includes("Digitized Pages")) {
+      citations.add("hisco");
+    }
+    if (name.includes("Applications") || name.includes("Vacancies") || name.includes("AF")) {
+      citations.add("af");
+    }
+    if (name.includes("Population") || name.includes("SCB")) {
+      citations.add("scb");
+    }
+    if (name.includes("Circulation") || name.includes("Price") || name.includes("Page Count")) {
+      citations.add("dn");
+    }
+  });
+
+  // Build BibTeX content
+  const bibContent = [
+    "% Data Source Citations",
+    "% Generated from Swedish Job Market Historical Data Visualization",
+    "% " + new Date().toISOString().split('T')[0],
+    "",
+    ...Array.from(citations).map(source => bibEntries[source])
+  ].join("\n");
+
+  const blob = new Blob([bibContent], {type: "text/plain;charset=utf-8;"});
+  const link = document.createElement("a");
+  link.download = filename;
+  link.href = URL.createObjectURL(blob);
+  link.click();
+}
+
+// Helper function to download all three files at once
+function downloadAll(chartContainer, data, seriesNames, basename) {
+  // Download PNG
+  downloadChartAsPNG(chartContainer, basename + ".png");
+
+  // Small delay to avoid browser blocking multiple downloads
+  setTimeout(() => {
+    downloadCSV(data, basename + ".csv");
+  }, 100);
+
+  setTimeout(() => {
+    downloadBibTeX(seriesNames, basename + ".bib");
+  }, 200);
+}
+return {filterByGender,colors,globalXDomain,rule1906,label1906,chartWidth,chartHeight,margins,downloadChartAsPNG,downloadCSV,bibEntries,downloadBibTeX,downloadAll};
+}});
+
+define({id: "57ccf124", inputs: ["view","Inputs"], outputs: ["hitsJobsSelection"], body: (view,Inputs) => {
+const hitsJobsSelection = view(Inputs.checkbox(
+  [
+    {id: "male_hits", name: "Male Hits (HISCO)", axis: "left"},
+    {id: "female_hits", name: "Female Hits (HISCO)", axis: "left"},
+    {id: "both_hits", name: "Both/Ungendered Hits", axis: "left"},
+    {id: "male_apps", name: "Male Applications (AF)", axis: "right"},
+    {id: "male_vaca", name: "Male Vacancies (AF)", axis: "right"},
+    {id: "female_apps", name: "Female Applications (AF)", axis: "right"},
+    {id: "female_vaca", name: "Female Vacancies (AF)", axis: "right"},
+    {id: "stockholm_city", name: "Stockholm City Population (SCB)", axis: "right"},
+    {id: "stockholm_county", name: "Stockholm County Population (SCB)", axis: "right"}
+  ],
+  {
+    label: "Show:",
+    value: [
+      {id: "male_hits", name: "Male Hits (HISCO)", axis: "left"},
+      {id: "female_hits", name: "Female Hits (HISCO)", axis: "left"}
+    ],
+    key: d => d.id,
+    format: d => d.name
+  }
+));
+return {hitsJobsSelection};
+}});
+
+define({id: "1ceb2ab3", inputs: ["hitsJobsSelection","filterByGender","hisco_dn_gender_filtered","colors","af_stockholm_filtered","scb_population_filtered","html","chartWidth","chartHeight","Plot","margins","globalXDomain","rule1906","label1906","downloadChartAsPNG","downloadCSV","downloadBibTeX","downloadAll","display"], body: (hitsJobsSelection,filterByGender,hisco_dn_gender_filtered,colors,af_stockholm_filtered,scb_population_filtered,html,chartWidth,chartHeight,Plot,margins,globalXDomain,rule1906,label1906,downloadChartAsPNG,downloadCSV,downloadBibTeX,downloadAll,display) => {
+if (hitsJobsSelection.length > 0) {
+  const leftAxisSeries = hitsJobsSelection.filter(s => s.axis === "left");
+  const rightAxisSeries = hitsJobsSelection.filter(s => s.axis === "right");
+
+  // Prepare left axis data (HISCO hits)
+  const leftData = [];
+  leftAxisSeries.forEach(series => {
+    switch(series.id) {
+      case "male_hits":
+        leftData.push(...filterByGender(hisco_dn_gender_filtered, "male").map(d => ({
+          year: d.year,
+          value: d.count,
+          series: "Male Hits",
+          color: colors.male_hits
+        })));
+        break;
+      case "female_hits":
+        leftData.push(...filterByGender(hisco_dn_gender_filtered, "female").map(d => ({
+          year: d.year,
+          value: d.count,
+          series: "Female Hits",
+          color: colors.female_hits
+        })));
+        break;
+      case "both_hits":
+        leftData.push(...filterByGender(hisco_dn_gender_filtered, "both").map(d => ({
+          year: d.year,
+          value: d.count,
+          series: "Both/Ungendered",
+          color: colors.both_hits
+        })));
+        break;
+    }
+  });
+
+  // Prepare right axis data (AF applications/vacancies)
+  const rightData = [];
+  rightAxisSeries.forEach(series => {
+    switch(series.id) {
+      case "male_apps":
+        rightData.push(...af_stockholm_filtered.map(d => ({
+          year: d.year,
+          value: d.male_apps,
+          series: "Male Applications",
+          color: colors.male_apps
+        })));
+        break;
+      case "male_vaca":
+        rightData.push(...af_stockholm_filtered.map(d => ({
+          year: d.year,
+          value: d.male_vaca,
+          series: "Male Vacancies",
+          color: colors.male_vaca
+        })));
+        break;
+      case "female_apps":
+        rightData.push(...af_stockholm_filtered.map(d => ({
+          year: d.year,
+          value: d.female_apps,
+          series: "Female Applications",
+          color: colors.female_apps
+        })));
+        break;
+      case "female_vaca":
+        rightData.push(...af_stockholm_filtered.map(d => ({
+          year: d.year,
+          value: d.female_vaca,
+          series: "Female Vacancies",
+          color: colors.female_vaca
+        })));
+        break;
+      case "stockholm_city":
+        rightData.push(...scb_population_filtered.map(d => ({
+          year: d.year,
+          value: d.stockholm_city,
+          series: "Stockholm City Population",
+          color: colors.stockholm_city
+        })));
+        break;
+      case "stockholm_county":
+        rightData.push(...scb_population_filtered.map(d => ({
+          year: d.year,
+          value: d.stockholm_county,
+          series: "Stockholm County Population",
+          color: colors.stockholm_county
+        })));
+        break;
+    }
+  });
+
+  // Create container with overlaid charts and space for legend
+  const container = html`<div style="display: flex; gap: 15px; align-items: flex-start;"></div>`;
+  const chartContainer = html`<div style="position: relative; width: ${chartWidth}px; height: ${chartHeight}px;"></div>`;
+
+  // Left axis chart (Job ad hits)
+  if (leftData.length > 0) {
+    const leftChart = Plot.plot({
+      width: chartWidth,
+      height: chartHeight,
+      marginLeft: margins.left,
+      marginRight: rightData.length > 0 ? 80 : margins.right,
+      marginTop: margins.top,
+      marginBottom: margins.bottom,
+
+      x: {label: null, grid: true, domain: globalXDomain, tickFormat: d => d.toString()},
+      y: {label: "Job Ad Hits", grid: true, zero: true},
+
+      marks: [
+
+        Plot.line(leftData, {x: "year", y: "value", stroke: "color", z: "series", strokeWidth: 2.5, tip: true}),
+        Plot.dot(leftData.filter(d => d.value != null), {x: "year", y: "value", fill: "color", z: "series", r: 2})
+      ]
+    });
+    chartContainer.appendChild(leftChart);
+  }
+
+  // Right axis chart (Applications & Vacancies)
+  if (rightData.length > 0) {
+    const rightValues = rightData.map(d => d.value).filter(v => v != null);
+    const rightMax = Math.max(...rightValues);
+
+    const rightChart = Plot.plot({
+      width: chartWidth,
+      height: chartHeight,
+      marginLeft: margins.left,
+      marginRight: 80,
+      marginTop: margins.top,
+      marginBottom: margins.bottom,
+      style: leftData.length > 0 ? "position: absolute; top: 0; left: 0; pointer-events: none;" : "",
+
+      x: {label: null, axis: leftData.length > 0 ? null : true, grid: leftData.length === 0, domain: globalXDomain, tickFormat: d => d.toString()},
+      y: {
+        label: "Employment & Population ↑",
+        labelAnchor: "top",
+        labelOffset: 40,
+        grid: false,
+        domain: [0, rightMax * 1.1],
+        tickFormat: d => d.toLocaleString(),
+        axis: "right"
+      },
+
+      marks: [
+        leftData.length === 0 ? rule1906 : null,
+        leftData.length === 0 ? label1906 : null,
+        Plot.line(rightData, {x: "year", y: "value", stroke: "color", z: "series", strokeWidth: 2.5, tip: true}),
+        Plot.dot(rightData.filter(d => d.value != null), {x: "year", y: "value", fill: "color", z: "series", r: 2})
+      ].filter(Boolean)
+    });
+
+    if (leftData.length > 0) {
+      rightChart.style.pointerEvents = "auto";
+      rightChart.querySelectorAll("circle, path").forEach(el => {
+        el.style.pointerEvents = "auto";
+      });
+    }
+
+    chartContainer.appendChild(rightChart);
+  }
+
+  // Create unified legend with all series
+  const allLegendItems = [
+    ...leftData.map(d => ({series: d.series, color: d.color})),
+    ...rightData.map(d => ({series: d.series, color: d.color}))
+  ];
+  const uniqueLegendItems = [];
+  const seen = new Set();
+  allLegendItems.forEach(item => {
+    if (!seen.has(item.series)) {
+      seen.add(item.series);
+      uniqueLegendItems.push(item);
+    }
+  });
+
+  const legend = html`<div style="background: rgba(255,255,255,0.9); padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 12px; align-self: flex-start;">
+    ${uniqueLegendItems.map(item => html`<div style="margin: 4px 0; display: flex; align-items: center; white-space: nowrap;">
+      <span style="display: inline-block; width: 24px; height: 3px; background: ${item.color}; margin-right: 8px;"></span>
+      <span>${item.series}</span>
+    </div>`)}
+  </div>`;
+
+  container.appendChild(chartContainer);
+  container.appendChild(legend);
+
+  // Add download buttons
+  const allSeriesNames = [...new Set([...leftData, ...rightData].map(d => d.series))];
+  const allData = [...leftData, ...rightData];
+  const downloadButtons = html`<div style="margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap;">
+    <button onclick=${() => downloadChartAsPNG(chartContainer, "panel1_job_ads_employment.png")}
+            style="padding: 8px 16px; background: #4e79a7; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 13px;">
+      📥 Download PNG
+    </button>
+    <button onclick=${() => downloadCSV(allData, "panel1_job_ads_employment.csv")}
+            style="padding: 8px 16px; background: #59a14f; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 13px;">
+      📊 Download CSV
+    </button>
+    <button onclick=${() => downloadBibTeX(allSeriesNames, "panel1_job_ads_employment.bib")}
+            style="padding: 8px 16px; background: #b07aa1; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 13px;">
+      📚 Download BibTeX
+    </button>
+    <button onclick=${() => downloadAll(chartContainer, allData, allSeriesNames, "panel1_job_ads_employment")}
+            style="padding: 8px 16px; background: #e15759; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: bold;">
+      📦 Download All
+    </button>
+  </div>`;
+
+  const wrapper = html`<div class="panel-container">${container}${downloadButtons}</div>`;
+  display(wrapper);
+} else {
+  display(html`<div style="height: ${chartHeight}px; display: flex; align-items: center; justify-content: center; color: #999; border: 1px dashed #ddd;">Select data series above</div>`);
+}
+}});
+
+define({id: "a13a8923", inputs: ["view","Inputs"], outputs: ["pagesSelection"], body: (view,Inputs) => {
+const pagesSelection = view(Inputs.checkbox(
+  [
+    {id: "digitized_pages", name: "Digitized Pages", axis: "left"},
+    {id: "page_count_min", name: "Page Count (Min)", axis: "right"},
+    {id: "page_count_max", name: "Page Count (Max)", axis: "right"}
+  ],
+  {
+    label: "Show:",
+    value: [
+      {id: "digitized_pages", name: "Digitized Pages", axis: "left"}
+    ],
+    key: d => d.id,
+    format: d => d.name
+  }
+));
+return {pagesSelection};
+}});
+
+define({id: "ba2d8c3b", inputs: ["pagesSelection","hisco_dn_pages_filtered","colors","dn_pages_filtered","margins","html","chartWidth","chartHeight","Plot","globalXDomain","rule1906","label1906","downloadChartAsPNG","downloadCSV","downloadBibTeX","downloadAll","display"], body: (pagesSelection,hisco_dn_pages_filtered,colors,dn_pages_filtered,margins,html,chartWidth,chartHeight,Plot,globalXDomain,rule1906,label1906,downloadChartAsPNG,downloadCSV,downloadBibTeX,downloadAll,display) => {
+if (pagesSelection.length > 0) {
+  const leftAxisSeries = pagesSelection.filter(s => s.axis === "left");
+  const rightAxisSeries = pagesSelection.filter(s => s.axis === "right");
+
+  // Prepare left axis data (Digitized pages)
+  const leftData = [];
+  leftAxisSeries.forEach(series => {
+    if (series.id === "digitized_pages") {
+      leftData.push(...hisco_dn_pages_filtered.map(d => ({
+        year: d.year,
+        value: d.pages,
+        series: "Digitized Pages",
+        color: colors.digitized_pages
+      })));
+    }
+  });
+
+  // Prepare right axis data (Page count)
+  const rightData = [];
+  rightAxisSeries.forEach(series => {
+    if (series.id === "page_count_min") {
+      rightData.push(...dn_pages_filtered.map(d => ({
+        year: d.year,
+        value: d.pages_min,
+        series: "Page Count (Min)",
+        color: colors.page_count_min
+      })));
+    } else if (series.id === "page_count_max") {
+      rightData.push(...dn_pages_filtered.map(d => ({
+        year: d.year,
+        value: d.pages_max,
+        series: "Page Count (Max)",
+        color: colors.page_count_max
+      })));
+    }
+  });
+
+  // Consistent margins for both charts
+  const leftMargin = margins.left;
+  const rightMargin = 80;
+
+  // Create container with overlaid charts and space for legend
+  const container = html`<div style="display: flex; gap: 15px; align-items: flex-start;"></div>`;
+  const chartContainer = html`<div style="position: relative; width: ${chartWidth}px; height: ${chartHeight}px;"></div>`;
+
+  // Left axis chart (Digitized pages)
+  if (leftData.length > 0) {
+    const leftChart = Plot.plot({
+      width: chartWidth,
+      height: chartHeight,
+      marginLeft: leftMargin,
+      marginRight: rightMargin,
+      marginTop: margins.top,
+      marginBottom: margins.bottom,
+
+      x: {label: null, grid: true, domain: globalXDomain, tickFormat: d => d.toString()},
+      y: {label: "Digitized Pages", grid: true, zero: true},
+
+      marks: [
+
+        Plot.line(leftData, {x: "year", y: "value", stroke: "color", z: "series", strokeWidth: 2.5, tip: true}),
+        Plot.dot(leftData.filter(d => d.value != null), {x: "year", y: "value", fill: "color", z: "series", r: 2})
+      ]
+    });
+    chartContainer.appendChild(leftChart);
+  }
+
+  // Right axis chart (Page count)
+  if (rightData.length > 0) {
+    const rightValues = rightData.map(d => d.value).filter(v => v != null);
+    const rightMax = Math.max(...rightValues);
+
+    const rightChart = Plot.plot({
+      width: chartWidth,
+      height: chartHeight,
+      marginLeft: leftMargin,
+      marginRight: rightMargin,
+      marginTop: margins.top,
+      marginBottom: margins.bottom,
+      style: leftData.length > 0 ? "position: absolute; top: 0; left: 0; pointer-events: none;" : "",
+
+      x: {label: null, axis: leftData.length > 0 ? null : true, grid: leftData.length === 0, domain: globalXDomain, tickFormat: d => d.toString()},
+      y: {
+        label: "Page Count ↑",
+        labelAnchor: "top",
+        labelOffset: 40,
+        grid: false,
+        domain: [0, rightMax * 1.1],
+        axis: "right"
+      },
+
+      marks: [
+        leftData.length === 0 ? rule1906 : null,
+        leftData.length === 0 ? label1906 : null,
+        Plot.line(rightData, {x: "year", y: "value", stroke: "color", z: "series", strokeWidth: 2.5, tip: true}),
+        Plot.dot(rightData.filter(d => d.value != null), {x: "year", y: "value", fill: "color", z: "series", r: 2})
+      ].filter(Boolean)
+    });
+
+    if (leftData.length > 0) {
+      rightChart.style.pointerEvents = "auto";
+      rightChart.querySelectorAll("circle, path").forEach(el => {
+        el.style.pointerEvents = "auto";
+      });
+    }
+
+    chartContainer.appendChild(rightChart);
+  }
+
+  // Create unified legend with all series
+  const allLegendItems = [
+    ...leftData.map(d => ({series: d.series, color: d.color})),
+    ...rightData.map(d => ({series: d.series, color: d.color}))
+  ];
+  const uniqueLegendItems = [];
+  const seen = new Set();
+  allLegendItems.forEach(item => {
+    if (!seen.has(item.series)) {
+      seen.add(item.series);
+      uniqueLegendItems.push(item);
+    }
+  });
+
+  const legend = html`<div style="background: rgba(255,255,255,0.9); padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 12px; align-self: flex-start;">
+    ${uniqueLegendItems.map(item => html`<div style="margin: 4px 0; display: flex; align-items: center; white-space: nowrap;">
+      <span style="display: inline-block; width: 24px; height: 3px; background: ${item.color}; margin-right: 8px;"></span>
+      <span>${item.series}</span>
+    </div>`)}
+  </div>`;
+
+  container.appendChild(chartContainer);
+  container.appendChild(legend);
+
+  // Add download buttons
+  const allSeriesNames = [...new Set([...leftData, ...rightData].map(d => d.series))];
+  const allData = [...leftData, ...rightData];
+  const downloadButtons = html`<div style="margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap;">
+    <button onclick=${() => downloadChartAsPNG(chartContainer, "panel2_digitized_pages.png")}
+            style="padding: 8px 16px; background: #4e79a7; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 13px;">
+      📥 Download PNG
+    </button>
+    <button onclick=${() => downloadCSV(allData, "panel2_digitized_pages.csv")}
+            style="padding: 8px 16px; background: #59a14f; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 13px;">
+      📊 Download CSV
+    </button>
+    <button onclick=${() => downloadBibTeX(allSeriesNames, "panel2_digitized_pages.bib")}
+            style="padding: 8px 16px; background: #b07aa1; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 13px;">
+      📚 Download BibTeX
+    </button>
+    <button onclick=${() => downloadAll(chartContainer, allData, allSeriesNames, "panel2_digitized_pages")}
+            style="padding: 8px 16px; background: #e15759; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: bold;">
+      📦 Download All
+    </button>
+  </div>`;
+
+  const wrapper = html`<div class="panel-container">${container}${downloadButtons}</div>`;
+  display(wrapper);
+} else {
+  display(html`<div style="height: ${chartHeight}px; display: flex; align-items: center; justify-content: center; color: #999; border: 1px dashed #ddd;">Select data series above</div>`);
+}
+}});
+
+define({id: "8901774a", inputs: ["view","Inputs"], outputs: ["circulationPriceSelection"], body: (view,Inputs) => {
+const circulationPriceSelection = view(Inputs.checkbox(
+  ["circulation", "price"],
+  {
+    label: "Show:",
+    value: ["circulation", "price"],
+    format: d => ({circulation: "Circulation", price: "Price (öre)"})[d]
+  }
+));
+return {circulationPriceSelection};
+}});
+
+define({id: "10d7a4fe", inputs: ["circulationPriceSelection","dn_circulation_filtered","colors","dn_price_filtered","html","chartWidth","chartHeight","Plot","margins","globalXDomain","rule1906","label1906","downloadChartAsPNG","downloadCSV","downloadBibTeX","downloadAll","display"], body: (circulationPriceSelection,dn_circulation_filtered,colors,dn_price_filtered,html,chartWidth,chartHeight,Plot,margins,globalXDomain,rule1906,label1906,downloadChartAsPNG,downloadCSV,downloadBibTeX,downloadAll,display) => {
+if (circulationPriceSelection.length > 0) {
+  const hasCirculation = circulationPriceSelection.includes("circulation");
+  const hasPrice = circulationPriceSelection.includes("price");
+
+  // Prepare data
+  const circulationData = hasCirculation ? dn_circulation_filtered.map(d => ({
+    year: d.year,
+    value: d.circulation,
+    series: "Circulation",
+    color: colors.circulation,
+    axis: "left"
+  })) : [];
+
+  const priceData = hasPrice ? dn_price_filtered.map(d => ({
+    year: d.year,
+    value: d.price,
+    series: "Price (öre)",
+    color: colors.price,
+    axis: "right"
+  })) : [];
+
+  // Create container with two overlaid charts and space for legend
+  const container = html`<div style="display: flex; gap: 15px; align-items: flex-start;"></div>`;
+  const chartContainer = html`<div style="position: relative; width: ${chartWidth}px; height: ${chartHeight}px;"></div>`;
+
+  // Left axis chart (Circulation)
+  if (hasCirculation) {
+    const leftChart = Plot.plot({
+      width: chartWidth,
+      height: chartHeight,
+      marginLeft: margins.left,
+      marginRight: hasPrice ? 80 : margins.right,
+      marginTop: margins.top,
+      marginBottom: 40,
+
+      x: {label: "Year", grid: true, domain: globalXDomain, tickFormat: d => d.toString()},
+      y: {label: "Circulation", grid: true, zero: true},
+
+      marks: [
+
+        Plot.line(circulationData, {x: "year", y: "value", stroke: "color", strokeWidth: 2.5, tip: true}),
+        Plot.dot(circulationData.filter(d => d.value != null), {x: "year", y: "value", fill: "color", r: 2})
+      ]
+    });
+    chartContainer.appendChild(leftChart);
+  }
+
+  // Right axis chart (Price) - overlaid
+  if (hasPrice) {
+    // Get the range for price data
+    const priceValues = priceData.map(d => d.value).filter(v => v != null);
+    const priceMax = Math.max(...priceValues);
+
+    const rightChart = Plot.plot({
+      width: chartWidth,
+      height: chartHeight,
+      marginLeft: margins.left,
+      marginRight: 80,
+      marginTop: margins.top,
+      marginBottom: 40,
+      style: hasCirculation ? "position: absolute; top: 0; left: 0; pointer-events: none;" : "",
+
+      x: {label: hasCirculation ? null : "Year", axis: hasCirculation ? null : true, grid: !hasCirculation, domain: globalXDomain, tickFormat: d => d.toString()},
+      y: {
+        label: "Price (öre) ↑",
+        labelAnchor: "top",
+        labelOffset: 40,
+        grid: false,
+        domain: [0, priceMax * 1.1],
+        axis: "right"
+      },
+
+      marks: [
+        hasCirculation ? null : rule1906,
+        hasCirculation ? null : label1906,
+        Plot.line(priceData, {x: "year", y: "value", stroke: "color", strokeWidth: 2.5, tip: true}),
+        Plot.dot(priceData.filter(d => d.value != null), {x: "year", y: "value", fill: "color", r: 2})
+      ].filter(Boolean)
+    });
+
+    if (hasCirculation) {
+      // Make the right chart interactive for tooltips
+      rightChart.style.pointerEvents = "auto";
+      rightChart.querySelectorAll("circle, path").forEach(el => {
+        el.style.pointerEvents = "auto";
+      });
+    }
+
+    chartContainer.appendChild(rightChart);
+  }
+
+  // Create unified legend with all series
+  const allLegendItems = [
+    ...circulationData.map(d => ({series: d.series, color: d.color})),
+    ...priceData.map(d => ({series: d.series, color: d.color}))
+  ];
+  const uniqueLegendItems = [];
+  const seen = new Set();
+  allLegendItems.forEach(item => {
+    if (!seen.has(item.series)) {
+      seen.add(item.series);
+      uniqueLegendItems.push(item);
+    }
+  });
+
+  const legend = html`<div style="background: rgba(255,255,255,0.9); padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 12px; align-self: flex-start;">
+    ${uniqueLegendItems.map(item => html`<div style="margin: 4px 0; display: flex; align-items: center; white-space: nowrap;">
+      <span style="display: inline-block; width: 24px; height: 3px; background: ${item.color}; margin-right: 8px;"></span>
+      <span>${item.series}</span>
+    </div>`)}
+  </div>`;
+
+  container.appendChild(chartContainer);
+  container.appendChild(legend);
+
+  // Add download buttons
+  const allSeriesNames = [...new Set([...circulationData, ...priceData].map(d => d.series))];
+  const allData = [...circulationData, ...priceData];
+  const downloadButtons = html`<div style="margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap;">
+    <button onclick=${() => downloadChartAsPNG(chartContainer, "panel3_circulation_price.png")}
+            style="padding: 8px 16px; background: #4e79a7; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 13px;">
+      📥 Download PNG
+    </button>
+    <button onclick=${() => downloadCSV(allData, "panel3_circulation_price.csv")}
+            style="padding: 8px 16px; background: #59a14f; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 13px;">
+      📊 Download CSV
+    </button>
+    <button onclick=${() => downloadBibTeX(allSeriesNames, "panel3_circulation_price.bib")}
+            style="padding: 8px 16px; background: #b07aa1; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 13px;">
+      📚 Download BibTeX
+    </button>
+    <button onclick=${() => downloadAll(chartContainer, allData, allSeriesNames, "panel3_circulation_price")}
+            style="padding: 8px 16px; background: #e15759; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: bold;">
+      📦 Download All
+    </button>
+  </div>`;
+
+  const wrapper = html`<div class="panel-container">${container}${downloadButtons}</div>`;
+  display(wrapper);
+} else {
+  display(html`<div style="height: ${chartHeight}px; display: flex; align-items: center; justify-content: center; color: #999; border: 1px dashed #ddd;">Select data series above</div>`);
+}
+}});
+
+</script>
+</head>
+<body>
+<div id="observablehq-center">
+<main id="observablehq-main" class="observablehq">
+<h1 id="jadb-interactive-timelines" tabindex="-1"><a class="observablehq-header-anchor" href="#jadb-interactive-timelines">JADB: Interactive Timelines</a></h1>
+<h2 id="disclaimer" tabindex="-1"><a class="observablehq-header-anchor" href="#disclaimer">Disclaimer</a></h2>
+<p>The data is produced for a <strong>pilot</strong> project researching the
+economic history the labour market in Sweden, and is highly
+preliminary.</p>
+<div class="observablehq observablehq--block"><!--:970f4173:--></div>
+<div class="observablehq observablehq--block"><!--:d57d8fa4:--></div>
+<hr>
+<h2 id="timeline-filter" tabindex="-1"><a class="observablehq-header-anchor" href="#timeline-filter">Timeline Filter</a></h2>
+<p>Select the time range to display (default: 1870-1970):</p>
+<div class="grid grid-cols-2" style="gap: 2rem;">
+<div>
+<div class="observablehq observablehq--block"><!--:d2db8ce5:--></div>
+</div>
+<div>
+<div class="observablehq observablehq--block"><!--:e1a1be69:--></div>
+</div>
+</div>
+<div class="observablehq observablehq--block"><!--:b93b3c9c:--></div>
+<hr>
+<h2 id="download-all-data" tabindex="-1"><a class="observablehq-header-anchor" href="#download-all-data">Download All Data</a></h2>
+<p>Download all visualizations, data, and citations at once:</p>
+<div class="observablehq observablehq--block"><!--:57d30f18:--></div>
+<hr>
+<h2 id="visualization" tabindex="-1"><a class="observablehq-header-anchor" href="#visualization">Visualization</a></h2>
+<div class="observablehq observablehq--block"><!--:e4f1338c:--></div>
+<h3 id="panel-1-job-ad-hits-and-employment" tabindex="-1"><a class="observablehq-header-anchor" href="#panel-1-job-ad-hits-and-employment">Panel 1: Job Ad Hits &amp; Employment</a></h3>
+<p><strong>Select data series:</strong></p>
+<div class="observablehq observablehq--block"><!--:57ccf124:--></div>
+<div class="observablehq observablehq--block"><!--:1ceb2ab3:--></div>
+<h3 id="panel-2-digitized-pages-and-page-count" tabindex="-1"><a class="observablehq-header-anchor" href="#panel-2-digitized-pages-and-page-count">Panel 2: Digitized Pages &amp; Page Count</a></h3>
+<p><strong>Select data series:</strong></p>
+<div class="observablehq observablehq--block"><!--:a13a8923:--></div>
+<div class="observablehq observablehq--block"><!--:ba2d8c3b:--></div>
+<h3 id="panel-3-circulation-and-price" tabindex="-1"><a class="observablehq-header-anchor" href="#panel-3-circulation-and-price">Panel 3: Circulation &amp; Price</a></h3>
+<p><strong>Select data series:</strong></p>
+<div class="observablehq observablehq--block"><!--:8901774a:--></div>
+<div class="observablehq observablehq--block"><!--:10d7a4fe:--></div>
+<hr>
+<h2 id="data-notes" tabindex="-1"><a class="observablehq-header-anchor" href="#data-notes">Data Notes</a></h2>
+<ul>
+<li><strong>1906</strong> is marked on all charts - digitization drops sharply after this year</li>
+<li><strong>Gaps in data</strong> are shown as breaks in the lines (not interpolated)</li>
+<li><strong>HISCO job ads</strong> cover 1850-2000</li>
+<li><strong>DN metadata</strong> (circulation, price, page count) covers 1864-2025</li>
+<li><strong>Arbetsförmedlingen</strong> covers 1919-1959</li>
+<li>All panels share the same time axis for easy comparison</li>
+</ul>
+<h2 id="about-the-data" tabindex="-1"><a class="observablehq-header-anchor" href="#about-the-data">About the Data</a></h2>
+<p>This visualization combines four historical data sources:</p>
+<ol>
+<li><strong>HISCO Job Advertisements</strong> - Job titles from HISCO queried against Dagens Nyheter</li>
+<li><strong>Dagens Nyheter Metadata</strong> - Newspaper metrics from Swedish National Library archives</li>
+<li><strong>Employment Statistics</strong> - Stockholm employment data from Swedish statistical yearbooks</li>
+<li><strong>SCB Population Data</strong> - Historical population statistics for Stockholm city and county</li>
+</ol>
+<p>All data is preliminary and part of a pilot research project on Swedish economic history.</p>
+<h2 id="data-sources-and-citations" tabindex="-1"><a class="observablehq-header-anchor" href="#data-sources-and-citations">Data Sources &amp; Citations</a></h2>
+<h3 id="hisco-job-advertisement-data" tabindex="-1"><a class="observablehq-header-anchor" href="#hisco-job-advertisement-data">HISCO Job Advertisement Data</a></h3>
+<p><strong>Original Sources:</strong></p>
+<ul>
+<li><strong>Kungliga biblioteket</strong> (Royal Swedish Library). <em>Svenska tidningar</em>. Available at: <a href="https://tidningar.kb.se/" target="_blank" rel="noopener noreferrer">https://tidningar.kb.se/</a> (Accessed: 2025-10-15)</li>
+<li><strong>SwedPop</strong>. (2022). <em>HISCO Codes and Description</em>. Available at: <a href="https://swedpop.se/wp-content/uploads/2022/07/HISCO-codes-and-description-for-IDS-v2.pdf" target="_blank" rel="noopener noreferrer">https://swedpop.se/wp-content/uploads/2022/07/HISCO-codes-and-description-for-IDS-v2.pdf</a> (Accessed: 2025-10-15)</li>
+</ul>
+<p><strong>Data Repository:</strong> <a href="https://github.com/JobAdsData/HISCO_trend_notebook" target="_blank" rel="noopener noreferrer">https://github.com/JobAdsData/HISCO_trend_notebook</a></p>
+<h3 id="dagens-nyheter-metadata" tabindex="-1"><a class="observablehq-header-anchor" href="#dagens-nyheter-metadata">Dagens Nyheter Metadata</a></h3>
+<p><strong>Original Source:</strong></p>
+<ul>
+<li><strong>Nya Lundstedt Dagstidningar</strong>. (2025). <em>Svenska Dagstidningar 1900--2025</em>. Available at: <a href="https://tidning.kb.se/nld/nld/tidning_all?tidnId=4" target="_blank" rel="noopener noreferrer">https://tidning.kb.se/nld/nld/tidning_all?tidnId=4</a> (Accessed: 2025-10-14)</li>
+</ul>
+<p><strong>Data Repository:</strong> <a href="https://github.com/JobAdsData/nyalundstedt_DN" target="_blank" rel="noopener noreferrer">https://github.com/JobAdsData/nyalundstedt_DN</a></p>
+<h3 id="employment-statistics" tabindex="-1"><a class="observablehq-header-anchor" href="#employment-statistics">Employment Statistics</a></h3>
+<p><strong>Original Source:</strong></p>
+<ul>
+<li><strong>Stockholms stads statistiska kontor</strong>. (1924-1961). <em>Statistisk årsbok för Stockholms stad</em>. Stockholm: Stockholms stads statistiska kontor.</li>
+</ul>
+<p><strong>Data Repository:</strong> <a href="https://github.com/JobAdsData/arbetsformedlingen-sthlm" target="_blank" rel="noopener noreferrer">https://github.com/JobAdsData/arbetsformedlingen-sthlm</a></p>
+<h3 id="scb-population-data" tabindex="-1"><a class="observablehq-header-anchor" href="#scb-population-data">SCB Population Data</a></h3>
+<p><strong>Original Source:</strong></p>
+<ul>
+<li><strong>Statistiska centralbyrån</strong>. (1969). <em>Historisk statistik för Sverige: Del 1, Befolkning</em> (Andra upplagan). Stockholm: Statistiska centralbyrån. Available at: <a href="https://share.scb.se/OV9993/Data/Historisk%20statistik/Historisk%20statistik%20f%C3%B6r%20Sverige%201700-1900-tal/Del1-Befolkning-1720-1967.pdf" target="_blank" rel="noopener noreferrer">https://share.scb.se/OV9993/Data/Historisk statistik/Historisk statistik för Sverige 1700-1900-tal/Del1-Befolkning-1720-1967.pdf</a> (Accessed: 2025-10-15)</li>
+</ul>
+<p><strong>Data Repository:</strong> <a href="https://github.com/JobAdsData/scb-befolkning-sthlm" target="_blank" rel="noopener noreferrer">https://github.com/JobAdsData/scb-befolkning-sthlm</a></p>
+</main>
+<footer id="observablehq-footer">
+<div>Built with <a href="https://observablehq.com/framework/" target="_blank" rel="noopener noreferrer">Observable Framework</a> and <a href="https://claude.ai/code" target="_blank" rel="noopener noreferrer">Claude Code</a></div>
+</footer>
+</div>
+</body>
+</html>
