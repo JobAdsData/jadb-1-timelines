@@ -74,6 +74,39 @@ const Plot = await import("./_npm/@observablehq/plot@0.6.17/d761ef9b.js");
 return {Plot};
 }});
 
+define({id: "dbe68ae1", inputs: ["URLSearchParams"], outputs: ["getUrlParams","urlParams"], body: (URLSearchParams) => {
+// URL parameter utilities
+function getUrlParams() {
+  // Split hash into params and anchor (e.g., "#start=1900&panel1=male_hits&anchor=panel1")
+  const hash = window.location.hash.slice(1); // Remove leading #
+  const params = new URLSearchParams(hash);
+
+  const result = {
+    startYear: params.get('start') ? parseInt(params.get('start')) : null,
+    endYear: params.get('end') ? parseInt(params.get('end')) : null,
+    panel1: params.get('panel1') ? params.get('panel1').split(',') : null,
+    panel2: params.get('panel2') ? params.get('panel2').split(',') : null,
+    panel3: params.get('panel3') ? params.get('panel3').split(',') : null,
+    anchor: params.get('anchor') || null
+  };
+
+  return result;
+}
+
+const urlParams = getUrlParams();
+
+// Auto-scroll to panel if anchor is specified
+if (urlParams.anchor) {
+  setTimeout(() => {
+    const element = document.getElementById(urlParams.anchor);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, 500);
+}
+return {getUrlParams,urlParams};
+}});
+
 define({id: "d57d8fa4", inputs: ["FileAttachment"], outputs: ["hisco_dn_gender","hisco_dn_pages","dn_circulation","dn_price","dn_pages","af_stockholm","scb_population"], body: async (FileAttachment) => {
 // Load all data files
 const hisco_dn_gender = await FileAttachment("./data/hisco_dn_gender.csv").csv({typed: true});
@@ -86,24 +119,24 @@ const scb_population = await FileAttachment("./data/scb_population.csv").csv({ty
 return {hisco_dn_gender,hisco_dn_pages,dn_circulation,dn_price,dn_pages,af_stockholm,scb_population};
 }});
 
-define({id: "d2db8ce5", inputs: ["view","Inputs"], outputs: ["startYear"], body: (view,Inputs) => {
+define({id: "93cd2ad3", inputs: ["view","Inputs","urlParams"], outputs: ["startYear"], body: (view,Inputs,urlParams) => {
 const startYear = view(Inputs.range(
   [1850, 2025],
   {
     label: "Start Year",
-    value: 1870,
+    value: urlParams.startYear || 1870,
     step: 1
   }
 ));
 return {startYear};
 }});
 
-define({id: "e1a1be69", inputs: ["view","Inputs"], outputs: ["endYear"], body: (view,Inputs) => {
+define({id: "39625eb0", inputs: ["view","Inputs","urlParams"], outputs: ["endYear"], body: (view,Inputs,urlParams) => {
 const endYear = view(Inputs.range(
   [1850, 2025],
   {
     label: "End Year",
-    value: 1970,
+    value: urlParams.endYear || 1970,
     step: 1
   }
 ));
@@ -269,7 +302,7 @@ const downloadAllPanels = view(Inputs.button("📦 Download All Panels (9 files)
 return {downloadAllPanels};
 }});
 
-define({id: "9617eb4a", inputs: ["startYear","endYear","Plot","XMLSerializer","alert"], outputs: ["filterByGender","colors","globalXDomain","rule1906","label1906","chartWidth","chartHeight","margins","downloadChartAsPNG","downloadCSV","bibEntries","downloadBibTeX","downloadAll"], body: (startYear,endYear,Plot,XMLSerializer,alert) => {
+define({id: "ccb892bb", inputs: ["startYear","endYear","Plot","XMLSerializer","alert","URLSearchParams","prompt"], outputs: ["filterByGender","colors","globalXDomain","rule1906","label1906","chartWidth","chartHeight","margins","downloadChartAsPNG","downloadCSV","bibEntries","downloadBibTeX","downloadAll","sharePanel"], body: (startYear,endYear,Plot,XMLSerializer,alert,URLSearchParams,prompt) => {
 // Helper to filter by gender
 function filterByGender(data, gender) {
   return data.filter(d => d.gender === gender);
@@ -525,37 +558,71 @@ function downloadAll(chartContainer, data, seriesNames, basename) {
     downloadBibTeX(seriesNames, basename + ".bib");
   }, 200);
 }
-return {filterByGender,colors,globalXDomain,rule1906,label1906,chartWidth,chartHeight,margins,downloadChartAsPNG,downloadCSV,bibEntries,downloadBibTeX,downloadAll};
+
+// Helper function to copy share link to clipboard
+function sharePanel(panelId, seriesSelection) {
+  const url = new URL(window.location.origin + window.location.pathname);
+  const params = new URLSearchParams();
+
+  params.set('start', startYear);
+  params.set('end', endYear);
+  params.set('anchor', panelId);
+
+  if (panelId === 'panel1') {
+    params.set('panel1', seriesSelection.map(s => s.id).join(','));
+  } else if (panelId === 'panel2') {
+    params.set('panel2', seriesSelection.map(s => s.id).join(','));
+  } else if (panelId === 'panel3') {
+    params.set('panel3', seriesSelection.join(','));
+  }
+
+  url.hash = params.toString();
+  const shareUrl = url.toString();
+
+  navigator.clipboard.writeText(shareUrl).then(() => {
+    alert('Link copied to clipboard!\n\n' + shareUrl);
+  }).catch(() => {
+    prompt('Copy this link:', shareUrl);
+  });
+}
+return {filterByGender,colors,globalXDomain,rule1906,label1906,chartWidth,chartHeight,margins,downloadChartAsPNG,downloadCSV,bibEntries,downloadBibTeX,downloadAll,sharePanel};
 }});
 
-define({id: "05640824", inputs: ["view","Inputs"], outputs: ["hitsJobsSelection"], body: (view,Inputs) => {
-const hitsJobsSelection = view(Inputs.checkbox(
-  [
-    {id: "male_hits", name: "Male Hits (HISCO)", axis: "left"},
-    {id: "female_hits", name: "Female Hits (HISCO)", axis: "left"},
-    {id: "both_hits", name: "Both/Ungendered Hits", axis: "left"},
-    {id: "male_apps", name: "Male Applications (AF)", axis: "right"},
-    {id: "male_vaca", name: "Male Vacancies (AF)", axis: "right"},
-    {id: "female_apps", name: "Female Applications (AF)", axis: "right"},
-    {id: "female_vaca", name: "Female Vacancies (AF)", axis: "right"},
-    {id: "total_vacancies", name: "Total Vacancies (AF)", axis: "right"},
-    {id: "stockholm_city", name: "Stockholm City Population (SCB)", axis: "right"},
-    {id: "stockholm_county", name: "Stockholm County Population (SCB)", axis: "right"}
-  ],
-  {
-    label: "Show:",
-    value: [
+define({id: "479e3acf", inputs: ["urlParams","view","Inputs"], outputs: ["panel1Options","panel1InitialValue","hitsJobsSelection"], body: (urlParams,view,Inputs) => {
+const panel1Options = [
+  {id: "male_hits", name: "Male Hits (HISCO)", axis: "left"},
+  {id: "female_hits", name: "Female Hits (HISCO)", axis: "left"},
+  {id: "both_hits", name: "Both/Ungendered Hits", axis: "left"},
+  {id: "male_apps", name: "Male Applications (AF)", axis: "right"},
+  {id: "male_vaca", name: "Male Vacancies (AF)", axis: "right"},
+  {id: "female_apps", name: "Female Applications (AF)", axis: "right"},
+  {id: "female_vaca", name: "Female Vacancies (AF)", axis: "right"},
+  {id: "total_vacancies", name: "Total Vacancies (AF)", axis: "right"},
+  {id: "stockholm_city", name: "Stockholm City Population (SCB)", axis: "right"},
+  {id: "stockholm_county", name: "Stockholm County Population (SCB)", axis: "right"}
+];
+
+// Determine initial value from URL or use defaults
+const panel1InitialValue = urlParams.panel1
+  ? panel1Options.filter(opt => urlParams.panel1.includes(opt.id))
+  : [
       {id: "male_hits", name: "Male Hits (HISCO)", axis: "left"},
       {id: "female_hits", name: "Female Hits (HISCO)", axis: "left"}
-    ],
+    ];
+
+const hitsJobsSelection = view(Inputs.checkbox(
+  panel1Options,
+  {
+    label: "Show:",
+    value: panel1InitialValue,
     key: d => d.id,
     format: d => d.name
   }
 ));
-return {hitsJobsSelection};
+return {panel1Options,panel1InitialValue,hitsJobsSelection};
 }});
 
-define({id: "0dd7d7a7", inputs: ["hitsJobsSelection","filterByGender","hisco_dn_gender_filtered","colors","af_stockholm_filtered","scb_population_filtered","html","chartWidth","chartHeight","Plot","margins","globalXDomain","rule1906","label1906","downloadChartAsPNG","downloadCSV","downloadBibTeX","downloadAll","display"], body: (hitsJobsSelection,filterByGender,hisco_dn_gender_filtered,colors,af_stockholm_filtered,scb_population_filtered,html,chartWidth,chartHeight,Plot,margins,globalXDomain,rule1906,label1906,downloadChartAsPNG,downloadCSV,downloadBibTeX,downloadAll,display) => {
+define({id: "2208b79d", inputs: ["hitsJobsSelection","filterByGender","hisco_dn_gender_filtered","colors","af_stockholm_filtered","scb_population_filtered","html","chartWidth","chartHeight","Plot","margins","globalXDomain","rule1906","label1906","sharePanel","downloadChartAsPNG","downloadCSV","downloadBibTeX","downloadAll","display"], body: (hitsJobsSelection,filterByGender,hisco_dn_gender_filtered,colors,af_stockholm_filtered,scb_population_filtered,html,chartWidth,chartHeight,Plot,margins,globalXDomain,rule1906,label1906,sharePanel,downloadChartAsPNG,downloadCSV,downloadBibTeX,downloadAll,display) => {
 if (hitsJobsSelection.length > 0) {
   const leftAxisSeries = hitsJobsSelection.filter(s => s.axis === "left");
   const rightAxisSeries = hitsJobsSelection.filter(s => s.axis === "right");
@@ -751,6 +818,10 @@ if (hitsJobsSelection.length > 0) {
   const allSeriesNames = [...new Set([...leftData, ...rightData].map(d => d.series))];
   const allData = [...leftData, ...rightData];
   const downloadButtons = html`<div style="margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap;">
+    <button onclick=${() => sharePanel('panel1', hitsJobsSelection)}
+            style="padding: 8px 16px; background: #9c6644; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: bold;">
+      🔗 Share Panel
+    </button>
     <button onclick=${() => downloadChartAsPNG(chartContainer, "panel1_job_ads_employment.png")}
             style="padding: 8px 16px; background: #4e79a7; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 13px;">
       📥 Download PNG
@@ -776,26 +847,30 @@ if (hitsJobsSelection.length > 0) {
 }
 }});
 
-define({id: "a13a8923", inputs: ["view","Inputs"], outputs: ["pagesSelection"], body: (view,Inputs) => {
+define({id: "5fed992d", inputs: ["urlParams","view","Inputs"], outputs: ["panel2Options","panel2InitialValue","pagesSelection"], body: (urlParams,view,Inputs) => {
+const panel2Options = [
+  {id: "digitized_pages", name: "Digitized Pages", axis: "left"},
+  {id: "page_count_min", name: "Page Count (Min)", axis: "right"},
+  {id: "page_count_max", name: "Page Count (Max)", axis: "right"}
+];
+
+const panel2InitialValue = urlParams.panel2
+  ? panel2Options.filter(opt => urlParams.panel2.includes(opt.id))
+  : [{id: "digitized_pages", name: "Digitized Pages", axis: "left"}];
+
 const pagesSelection = view(Inputs.checkbox(
-  [
-    {id: "digitized_pages", name: "Digitized Pages", axis: "left"},
-    {id: "page_count_min", name: "Page Count (Min)", axis: "right"},
-    {id: "page_count_max", name: "Page Count (Max)", axis: "right"}
-  ],
+  panel2Options,
   {
     label: "Show:",
-    value: [
-      {id: "digitized_pages", name: "Digitized Pages", axis: "left"}
-    ],
+    value: panel2InitialValue,
     key: d => d.id,
     format: d => d.name
   }
 ));
-return {pagesSelection};
+return {panel2Options,panel2InitialValue,pagesSelection};
 }});
 
-define({id: "ba2d8c3b", inputs: ["pagesSelection","hisco_dn_pages_filtered","colors","dn_pages_filtered","margins","html","chartWidth","chartHeight","Plot","globalXDomain","rule1906","label1906","downloadChartAsPNG","downloadCSV","downloadBibTeX","downloadAll","display"], body: (pagesSelection,hisco_dn_pages_filtered,colors,dn_pages_filtered,margins,html,chartWidth,chartHeight,Plot,globalXDomain,rule1906,label1906,downloadChartAsPNG,downloadCSV,downloadBibTeX,downloadAll,display) => {
+define({id: "b6987327", inputs: ["pagesSelection","hisco_dn_pages_filtered","colors","dn_pages_filtered","margins","html","chartWidth","chartHeight","Plot","globalXDomain","rule1906","label1906","sharePanel","downloadChartAsPNG","downloadCSV","downloadBibTeX","downloadAll","display"], body: (pagesSelection,hisco_dn_pages_filtered,colors,dn_pages_filtered,margins,html,chartWidth,chartHeight,Plot,globalXDomain,rule1906,label1906,sharePanel,downloadChartAsPNG,downloadCSV,downloadBibTeX,downloadAll,display) => {
 if (pagesSelection.length > 0) {
   const leftAxisSeries = pagesSelection.filter(s => s.axis === "left");
   const rightAxisSeries = pagesSelection.filter(s => s.axis === "right");
@@ -933,6 +1008,10 @@ if (pagesSelection.length > 0) {
   const allSeriesNames = [...new Set([...leftData, ...rightData].map(d => d.series))];
   const allData = [...leftData, ...rightData];
   const downloadButtons = html`<div style="margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap;">
+    <button onclick=${() => sharePanel('panel2', pagesSelection)}
+            style="padding: 8px 16px; background: #9c6644; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: bold;">
+      🔗 Share Panel
+    </button>
     <button onclick=${() => downloadChartAsPNG(chartContainer, "panel2_digitized_pages.png")}
             style="padding: 8px 16px; background: #4e79a7; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 13px;">
       📥 Download PNG
@@ -958,19 +1037,25 @@ if (pagesSelection.length > 0) {
 }
 }});
 
-define({id: "8901774a", inputs: ["view","Inputs"], outputs: ["circulationPriceSelection"], body: (view,Inputs) => {
+define({id: "2c70321c", inputs: ["urlParams","view","Inputs"], outputs: ["panel3Options","panel3InitialValue","circulationPriceSelection"], body: (urlParams,view,Inputs) => {
+const panel3Options = ["circulation", "price"];
+
+const panel3InitialValue = urlParams.panel3
+  ? panel3Options.filter(opt => urlParams.panel3.includes(opt))
+  : ["circulation", "price"];
+
 const circulationPriceSelection = view(Inputs.checkbox(
-  ["circulation", "price"],
+  panel3Options,
   {
     label: "Show:",
-    value: ["circulation", "price"],
+    value: panel3InitialValue,
     format: d => ({circulation: "Circulation", price: "Price (öre)"})[d]
   }
 ));
-return {circulationPriceSelection};
+return {panel3Options,panel3InitialValue,circulationPriceSelection};
 }});
 
-define({id: "10d7a4fe", inputs: ["circulationPriceSelection","dn_circulation_filtered","colors","dn_price_filtered","html","chartWidth","chartHeight","Plot","margins","globalXDomain","rule1906","label1906","downloadChartAsPNG","downloadCSV","downloadBibTeX","downloadAll","display"], body: (circulationPriceSelection,dn_circulation_filtered,colors,dn_price_filtered,html,chartWidth,chartHeight,Plot,margins,globalXDomain,rule1906,label1906,downloadChartAsPNG,downloadCSV,downloadBibTeX,downloadAll,display) => {
+define({id: "92aa88c5", inputs: ["circulationPriceSelection","dn_circulation_filtered","colors","dn_price_filtered","html","chartWidth","chartHeight","Plot","margins","globalXDomain","rule1906","label1906","sharePanel","downloadChartAsPNG","downloadCSV","downloadBibTeX","downloadAll","display"], body: (circulationPriceSelection,dn_circulation_filtered,colors,dn_price_filtered,html,chartWidth,chartHeight,Plot,margins,globalXDomain,rule1906,label1906,sharePanel,downloadChartAsPNG,downloadCSV,downloadBibTeX,downloadAll,display) => {
 if (circulationPriceSelection.length > 0) {
   const hasCirculation = circulationPriceSelection.includes("circulation");
   const hasPrice = circulationPriceSelection.includes("price");
@@ -1090,6 +1175,10 @@ if (circulationPriceSelection.length > 0) {
   const allSeriesNames = [...new Set([...circulationData, ...priceData].map(d => d.series))];
   const allData = [...circulationData, ...priceData];
   const downloadButtons = html`<div style="margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap;">
+    <button onclick=${() => sharePanel('panel3', circulationPriceSelection)}
+            style="padding: 8px 16px; background: #9c6644; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: bold;">
+      🔗 Share Panel
+    </button>
     <button onclick=${() => downloadChartAsPNG(chartContainer, "panel3_circulation_price.png")}
             style="padding: 8px 16px; background: #4e79a7; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 13px;">
       📥 Download PNG
@@ -1126,16 +1215,20 @@ if (circulationPriceSelection.length > 0) {
 economic history the labour market in Sweden, and is highly
 preliminary.</p>
 <div class="observablehq observablehq--block"><!--:970f4173:--></div>
+<div class="observablehq observablehq--block"><!--:dbe68ae1:--></div>
 <div class="observablehq observablehq--block"><!--:d57d8fa4:--></div>
 <hr>
 <h2 id="timeline-filter" tabindex="-1"><a class="observablehq-header-anchor" href="#timeline-filter">Timeline Filter</a></h2>
 <p>Select the time range to display (default: 1870-1970):</p>
+<div style="background: #f0f7ff; border-left: 4px solid #4e79a7; padding: 12px; margin: 16px 0; font-size: 0.9em;">
+💡 <strong>Tip:</strong> Use the "🔗 Share Panel" button below each panel to generate a shareable URL that preserves your current selections and jumps directly to that panel.
+</div>
 <div class="grid grid-cols-2" style="gap: 2rem;">
 <div>
-<div class="observablehq observablehq--block"><!--:d2db8ce5:--></div>
+<div class="observablehq observablehq--block"><!--:93cd2ad3:--></div>
 </div>
 <div>
-<div class="observablehq observablehq--block"><!--:e1a1be69:--></div>
+<div class="observablehq observablehq--block"><!--:39625eb0:--></div>
 </div>
 </div>
 <div class="observablehq observablehq--block"><!--:b93b3c9c:--></div>
@@ -1145,19 +1238,19 @@ preliminary.</p>
 <div class="observablehq observablehq--block"><!--:04f186a0:--></div>
 <hr>
 <h2 id="visualization" tabindex="-1"><a class="observablehq-header-anchor" href="#visualization">Visualization</a></h2>
-<div class="observablehq observablehq--block"><!--:9617eb4a:--></div>
-<h3 id="panel-1-job-ad-hits-and-employment" tabindex="-1"><a class="observablehq-header-anchor" href="#panel-1-job-ad-hits-and-employment">Panel 1: Job Ad Hits &amp; Employment</a></h3>
+<div class="observablehq observablehq--block"><!--:ccb892bb:--></div>
+<h3 id="panel1"><a class="observablehq-header-anchor" href="#panel1">Panel 1: Job Ad Hits &amp; Employment</a></h3>
 <p><strong>Select data series:</strong></p>
-<div class="observablehq observablehq--block"><!--:05640824:--></div>
-<div class="observablehq observablehq--block"><!--:0dd7d7a7:--></div>
-<h3 id="panel-2-digitized-pages-and-page-count" tabindex="-1"><a class="observablehq-header-anchor" href="#panel-2-digitized-pages-and-page-count">Panel 2: Digitized Pages &amp; Page Count</a></h3>
+<div class="observablehq observablehq--block"><!--:479e3acf:--></div>
+<div class="observablehq observablehq--block"><!--:2208b79d:--></div>
+<h3 id="panel2"><a class="observablehq-header-anchor" href="#panel2">Panel 2: Digitized Pages &amp; Page Count</a></h3>
 <p><strong>Select data series:</strong></p>
-<div class="observablehq observablehq--block"><!--:a13a8923:--></div>
-<div class="observablehq observablehq--block"><!--:ba2d8c3b:--></div>
-<h3 id="panel-3-circulation-and-price" tabindex="-1"><a class="observablehq-header-anchor" href="#panel-3-circulation-and-price">Panel 3: Circulation &amp; Price</a></h3>
+<div class="observablehq observablehq--block"><!--:5fed992d:--></div>
+<div class="observablehq observablehq--block"><!--:b6987327:--></div>
+<h3 id="panel3"><a class="observablehq-header-anchor" href="#panel3">Panel 3: Circulation &amp; Price</a></h3>
 <p><strong>Select data series:</strong></p>
-<div class="observablehq observablehq--block"><!--:8901774a:--></div>
-<div class="observablehq observablehq--block"><!--:10d7a4fe:--></div>
+<div class="observablehq observablehq--block"><!--:2c70321c:--></div>
+<div class="observablehq observablehq--block"><!--:92aa88c5:--></div>
 <hr>
 <h2 id="data-notes" tabindex="-1"><a class="observablehq-header-anchor" href="#data-notes">Data Notes</a></h2>
 <ul>
