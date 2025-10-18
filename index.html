@@ -60,7 +60,7 @@
 import {define} from "./_observablehq/client.5d071151.js";
 import {registerFile} from "./_observablehq/stdlib.73a8ec5a.js";
 
-registerFile("./data/af_stockholm.csv", {"name":"./data/af_stockholm.csv","mimeType":"text/csv","path":"./_file/data/af_stockholm.4b9efe5e.csv","lastModified":1760477144276,"size":1595});
+registerFile("./data/af_stockholm.csv", {"name":"./data/af_stockholm.csv","mimeType":"text/csv","path":"./_file/data/af_stockholm.63110852.csv","lastModified":1760790950844,"size":2738});
 registerFile("./data/dn_circulation.csv", {"name":"./data/dn_circulation.csv","mimeType":"text/csv","path":"./_file/data/dn_circulation.2ef032ee.csv","lastModified":1760477144269,"size":1320});
 registerFile("./data/dn_pages.csv", {"name":"./data/dn_pages.csv","mimeType":"text/csv","path":"./_file/data/dn_pages.83113750.csv","lastModified":1760477144275,"size":1374});
 registerFile("./data/dn_price.csv", {"name":"./data/dn_price.csv","mimeType":"text/csv","path":"./_file/data/dn_price.bae2061c.csv","lastModified":1760477144270,"size":1330});
@@ -122,7 +122,7 @@ const scb_population_filtered = scb_population.filter(d => d.year >= startYear &
 return {hisco_dn_gender_filtered,hisco_dn_pages_filtered,dn_circulation_filtered,dn_price_filtered,dn_pages_filtered,af_stockholm_filtered,scb_population_filtered};
 }});
 
-define({id: "57d30f18", inputs: ["view","Inputs","hitsJobsSelection","hisco_dn_gender_filtered","colors","af_stockholm_filtered","scb_population_filtered","pagesSelection","hisco_dn_pages_filtered","dn_pages_filtered","circulationPriceSelection","dn_circulation_filtered","dn_price_filtered","downloadChartAsPNG","downloadCSV","downloadBibTeX","alert"], outputs: ["downloadAllPanels"], body: (view,Inputs,hitsJobsSelection,hisco_dn_gender_filtered,colors,af_stockholm_filtered,scb_population_filtered,pagesSelection,hisco_dn_pages_filtered,dn_pages_filtered,circulationPriceSelection,dn_circulation_filtered,dn_price_filtered,downloadChartAsPNG,downloadCSV,downloadBibTeX,alert) => {
+define({id: "04f186a0", inputs: ["view","Inputs","hitsJobsSelection","hisco_dn_gender_filtered","colors","af_stockholm_filtered","scb_population_filtered","pagesSelection","hisco_dn_pages_filtered","dn_pages_filtered","circulationPriceSelection","dn_circulation_filtered","dn_price_filtered","downloadChartAsPNG","downloadCSV","downloadBibTeX","alert"], outputs: ["downloadAllPanels"], body: (view,Inputs,hitsJobsSelection,hisco_dn_gender_filtered,colors,af_stockholm_filtered,scb_population_filtered,pagesSelection,hisco_dn_pages_filtered,dn_pages_filtered,circulationPriceSelection,dn_circulation_filtered,dn_price_filtered,downloadChartAsPNG,downloadCSV,downloadBibTeX,alert) => {
 const downloadAllPanels = view(Inputs.button("📦 Download All Panels (9 files)", {
   reduce: () => {
     // Collect all data and series for each panel
@@ -151,7 +151,8 @@ const downloadAllPanels = view(Inputs.button("📦 Download All Panels (9 files)
       } else if (series.id.includes("apps") || series.id.includes("vaca")) {
         const field = series.id === "male_apps" ? "male_apps" :
                       series.id === "male_vaca" ? "male_vaca" :
-                      series.id === "female_apps" ? "female_apps" : "female_vaca";
+                      series.id === "female_apps" ? "female_apps" :
+                      series.id === "female_vaca" ? "female_vaca" : "total_vacancies";
         const data = af_stockholm_filtered.map(d => ({
           year: d.year,
           value: d[field],
@@ -268,7 +269,7 @@ const downloadAllPanels = view(Inputs.button("📦 Download All Panels (9 files)
 return {downloadAllPanels};
 }});
 
-define({id: "e4f1338c", inputs: ["startYear","endYear","Plot","XMLSerializer","alert"], outputs: ["filterByGender","colors","globalXDomain","rule1906","label1906","chartWidth","chartHeight","margins","downloadChartAsPNG","downloadCSV","bibEntries","downloadBibTeX","downloadAll"], body: (startYear,endYear,Plot,XMLSerializer,alert) => {
+define({id: "9617eb4a", inputs: ["startYear","endYear","Plot","XMLSerializer","alert"], outputs: ["filterByGender","colors","globalXDomain","rule1906","label1906","chartWidth","chartHeight","margins","downloadChartAsPNG","downloadCSV","bibEntries","downloadBibTeX","downloadAll"], body: (startYear,endYear,Plot,XMLSerializer,alert) => {
 // Helper to filter by gender
 function filterByGender(data, gender) {
   return data.filter(d => d.gender === gender);
@@ -286,6 +287,7 @@ const colors = {
   male_vaca: "#aec7e8",
   female_apps: "#ff7f0e",
   female_vaca: "#ffbb78",
+  total_vacancies: "#9467bd",
   circulation: "#b07aa1",
   price: "#ff9da7",
   stockholm_city: "#76b7b2",
@@ -526,7 +528,7 @@ function downloadAll(chartContainer, data, seriesNames, basename) {
 return {filterByGender,colors,globalXDomain,rule1906,label1906,chartWidth,chartHeight,margins,downloadChartAsPNG,downloadCSV,bibEntries,downloadBibTeX,downloadAll};
 }});
 
-define({id: "57ccf124", inputs: ["view","Inputs"], outputs: ["hitsJobsSelection"], body: (view,Inputs) => {
+define({id: "05640824", inputs: ["view","Inputs"], outputs: ["hitsJobsSelection"], body: (view,Inputs) => {
 const hitsJobsSelection = view(Inputs.checkbox(
   [
     {id: "male_hits", name: "Male Hits (HISCO)", axis: "left"},
@@ -536,6 +538,7 @@ const hitsJobsSelection = view(Inputs.checkbox(
     {id: "male_vaca", name: "Male Vacancies (AF)", axis: "right"},
     {id: "female_apps", name: "Female Applications (AF)", axis: "right"},
     {id: "female_vaca", name: "Female Vacancies (AF)", axis: "right"},
+    {id: "total_vacancies", name: "Total Vacancies (AF)", axis: "right"},
     {id: "stockholm_city", name: "Stockholm City Population (SCB)", axis: "right"},
     {id: "stockholm_county", name: "Stockholm County Population (SCB)", axis: "right"}
   ],
@@ -552,7 +555,7 @@ const hitsJobsSelection = view(Inputs.checkbox(
 return {hitsJobsSelection};
 }});
 
-define({id: "1ceb2ab3", inputs: ["hitsJobsSelection","filterByGender","hisco_dn_gender_filtered","colors","af_stockholm_filtered","scb_population_filtered","html","chartWidth","chartHeight","Plot","margins","globalXDomain","rule1906","label1906","downloadChartAsPNG","downloadCSV","downloadBibTeX","downloadAll","display"], body: (hitsJobsSelection,filterByGender,hisco_dn_gender_filtered,colors,af_stockholm_filtered,scb_population_filtered,html,chartWidth,chartHeight,Plot,margins,globalXDomain,rule1906,label1906,downloadChartAsPNG,downloadCSV,downloadBibTeX,downloadAll,display) => {
+define({id: "0dd7d7a7", inputs: ["hitsJobsSelection","filterByGender","hisco_dn_gender_filtered","colors","af_stockholm_filtered","scb_population_filtered","html","chartWidth","chartHeight","Plot","margins","globalXDomain","rule1906","label1906","downloadChartAsPNG","downloadCSV","downloadBibTeX","downloadAll","display"], body: (hitsJobsSelection,filterByGender,hisco_dn_gender_filtered,colors,af_stockholm_filtered,scb_population_filtered,html,chartWidth,chartHeight,Plot,margins,globalXDomain,rule1906,label1906,downloadChartAsPNG,downloadCSV,downloadBibTeX,downloadAll,display) => {
 if (hitsJobsSelection.length > 0) {
   const leftAxisSeries = hitsJobsSelection.filter(s => s.axis === "left");
   const rightAxisSeries = hitsJobsSelection.filter(s => s.axis === "right");
@@ -622,6 +625,14 @@ if (hitsJobsSelection.length > 0) {
           value: d.female_vaca,
           series: "Female Vacancies",
           color: colors.female_vaca
+        })));
+        break;
+      case "total_vacancies":
+        rightData.push(...af_stockholm_filtered.map(d => ({
+          year: d.year,
+          value: d.total_vacancies,
+          series: "Total Vacancies",
+          color: colors.total_vacancies
         })));
         break;
       case "stockholm_city":
@@ -1131,14 +1142,14 @@ preliminary.</p>
 <hr>
 <h2 id="download-all-data" tabindex="-1"><a class="observablehq-header-anchor" href="#download-all-data">Download All Data</a></h2>
 <p>Download all visualizations, data, and citations at once:</p>
-<div class="observablehq observablehq--block"><!--:57d30f18:--></div>
+<div class="observablehq observablehq--block"><!--:04f186a0:--></div>
 <hr>
 <h2 id="visualization" tabindex="-1"><a class="observablehq-header-anchor" href="#visualization">Visualization</a></h2>
-<div class="observablehq observablehq--block"><!--:e4f1338c:--></div>
+<div class="observablehq observablehq--block"><!--:9617eb4a:--></div>
 <h3 id="panel-1-job-ad-hits-and-employment" tabindex="-1"><a class="observablehq-header-anchor" href="#panel-1-job-ad-hits-and-employment">Panel 1: Job Ad Hits &amp; Employment</a></h3>
 <p><strong>Select data series:</strong></p>
-<div class="observablehq observablehq--block"><!--:57ccf124:--></div>
-<div class="observablehq observablehq--block"><!--:1ceb2ab3:--></div>
+<div class="observablehq observablehq--block"><!--:05640824:--></div>
+<div class="observablehq observablehq--block"><!--:0dd7d7a7:--></div>
 <h3 id="panel-2-digitized-pages-and-page-count" tabindex="-1"><a class="observablehq-header-anchor" href="#panel-2-digitized-pages-and-page-count">Panel 2: Digitized Pages &amp; Page Count</a></h3>
 <p><strong>Select data series:</strong></p>
 <div class="observablehq observablehq--block"><!--:a13a8923:--></div>
@@ -1194,7 +1205,7 @@ preliminary.</p>
 <p><strong>Data Repository:</strong> <a href="https://github.com/JobAdsData/scb-befolkning-sthlm" target="_blank" rel="noopener noreferrer">https://github.com/JobAdsData/scb-befolkning-sthlm</a></p>
 </main>
 <footer id="observablehq-footer">
-<div>Built with <a href="https://observablehq.com/framework/" target="_blank" rel="noopener noreferrer">Observable Framework</a> and <a href="https://claude.ai/code" target="_blank" rel="noopener noreferrer">Claude Code</a></div>
+<div>Built with <a href="https://observablehq.com/framework/" target="_blank" rel="noopener noreferrer">Observable Framework</a> and <a href="https://claude.ai/code" target="_blank" rel="noopener noreferrer">Claude Code</a> • Last updated: 2025-10-18</div>
 </footer>
 </div>
 </body>
