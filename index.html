@@ -302,7 +302,7 @@ const downloadAllPanels = view(Inputs.button("📦 Download All Panels (9 files)
 return {downloadAllPanels};
 }});
 
-define({id: "ccb892bb", inputs: ["startYear","endYear","Plot","XMLSerializer","alert","URLSearchParams","prompt"], outputs: ["filterByGender","colors","globalXDomain","rule1906","label1906","chartWidth","chartHeight","margins","downloadChartAsPNG","downloadCSV","bibEntries","downloadBibTeX","downloadAll","sharePanel"], body: (startYear,endYear,Plot,XMLSerializer,alert,URLSearchParams,prompt) => {
+define({id: "226e243c", inputs: ["startYear","endYear","Plot","XMLSerializer","alert","URLSearchParams","prompt"], outputs: ["filterByGender","colors","globalXDomain","rule1906","label1906","chartWidth","chartHeight","margins","downloadChartAsPNG","downloadCSV","bibEntries","downloadBibTeX","downloadAll","sharePanel"], body: (startYear,endYear,Plot,XMLSerializer,alert,URLSearchParams,prompt) => {
 // Helper to filter by gender
 function filterByGender(data, gender) {
   return data.filter(d => d.gender === gender);
@@ -344,17 +344,28 @@ const chartWidth = 800;
 const chartHeight = 500;
 const margins = {left: 80, right: 20, top: 20, bottom: 50};
 
-// Helper function to download all SVGs as high-resolution PNG
+// Helper function to download chart with legend as high-resolution PNG
 function downloadChartAsPNG(container, filename) {
+  // Get the parent container that includes both chart and legend
+  const chartAndLegend = container.parentElement;
+  if (!chartAndLegend) return;
+
   const svgs = container.querySelectorAll("svg");
   if (svgs.length === 0) return;
+
+  // Get legend element
+  const legend = chartAndLegend.querySelector('div[style*="background: rgba(255,255,255,0.9)"]');
 
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
 
+  // Calculate total width including legend
+  const legendWidth = legend ? 200 : 0;
+  const totalWidth = chartWidth + legendWidth;
+
   // High resolution: 2x scale
   const scale = 2;
-  canvas.width = chartWidth * scale;
+  canvas.width = totalWidth * scale;
   canvas.height = chartHeight * scale;
 
   // Fill white background
@@ -375,12 +386,53 @@ function downloadChartAsPNG(container, filename) {
       images[index] = {img, url};
       loadedCount++;
 
-      // When all images are loaded, draw them in order
+      // When all images are loaded, draw them
       if (loadedCount === svgs.length) {
+        // Draw SVGs
         images.forEach(({img, url}) => {
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          ctx.drawImage(img, 0, 0, chartWidth * scale, chartHeight * scale);
           URL.revokeObjectURL(url);
         });
+
+        // Draw legend if present
+        if (legend) {
+          const legendX = chartWidth * scale + 15 * scale;
+          const legendY = 20 * scale;
+
+          // Draw legend background
+          ctx.fillStyle = "rgba(255, 255, 255, 0.95)";
+          ctx.strokeStyle = "#ddd";
+          ctx.lineWidth = 1 * scale;
+          const legendBoxWidth = 170 * scale;
+          const legendItems = legend.querySelectorAll('div[style*="margin: 4px"]');
+          const legendBoxHeight = (legendItems.length * 24 + 20) * scale;
+
+          ctx.fillRect(legendX, legendY, legendBoxWidth, legendBoxHeight);
+          ctx.strokeRect(legendX, legendY, legendBoxWidth, legendBoxHeight);
+
+          // Draw legend items
+          let yOffset = legendY + 15 * scale;
+          legendItems.forEach(item => {
+            const colorSpan = item.querySelector('span[style*="background"]');
+            const textSpan = item.querySelector('span:last-child');
+
+            if (colorSpan && textSpan) {
+              const color = colorSpan.style.background;
+              const text = textSpan.textContent;
+
+              // Draw color line
+              ctx.fillStyle = color;
+              ctx.fillRect(legendX + 10 * scale, yOffset, 24 * scale, 3 * scale);
+
+              // Draw text
+              ctx.fillStyle = "black";
+              ctx.font = `${12 * scale}px sans-serif`;
+              ctx.fillText(text, legendX + 42 * scale, yOffset + 3 * scale);
+
+              yOffset += 24 * scale;
+            }
+          });
+        }
 
         canvas.toBlob(function(blob) {
           const link = document.createElement("a");
@@ -1238,7 +1290,7 @@ preliminary.</p>
 <div class="observablehq observablehq--block"><!--:04f186a0:--></div>
 <hr>
 <h2 id="visualization" tabindex="-1"><a class="observablehq-header-anchor" href="#visualization">Visualization</a></h2>
-<div class="observablehq observablehq--block"><!--:ccb892bb:--></div>
+<div class="observablehq observablehq--block"><!--:226e243c:--></div>
 <h3 id="panel1"><a class="observablehq-header-anchor" href="#panel1">Panel 1: Job Ad Hits &amp; Employment</a></h3>
 <p><strong>Select data series:</strong></p>
 <div class="observablehq observablehq--block"><!--:479e3acf:--></div>
