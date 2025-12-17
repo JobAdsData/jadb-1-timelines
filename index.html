@@ -74,7 +74,7 @@ const Plot = await import("./_npm/@observablehq/plot@0.6.17/d761ef9b.js");
 return {Plot};
 }});
 
-define({id: "dbe68ae1", inputs: ["URLSearchParams"], outputs: ["getUrlParams","urlParams"], body: (URLSearchParams) => {
+define({id: "0887378b", inputs: ["URLSearchParams"], outputs: ["getUrlParams","urlParams"], body: (URLSearchParams) => {
 // URL parameter utilities
 function getUrlParams() {
   // Split hash into params and anchor (e.g., "#start=1900&panel1=male_hits&anchor=panel1")
@@ -87,6 +87,7 @@ function getUrlParams() {
     panel1: params.get('panel1') ? params.get('panel1').split(',') : null,
     panel2: params.get('panel2') ? params.get('panel2').split(',') : null,
     panel3: params.get('panel3') ? params.get('panel3').split(',') : null,
+    greyscale: params.get('greyscale') || null,
     anchor: params.get('anchor') || null
   };
 
@@ -143,6 +144,20 @@ const endYear = view(Inputs.range(
 return {endYear};
 }});
 
+define({id: "66b91651", inputs: ["view","Inputs","urlParams"], outputs: ["greyscaleMode"], body: (view,Inputs,urlParams) => {
+const greyscaleMode = view(Inputs.toggle({
+  label: "Greyscale Mode (for printing)",
+  value: urlParams.greyscale === 'true' || false
+}));
+return {greyscaleMode};
+}});
+
+define({id: "6a1d2ba3", inputs: ["greyscaleMode","greyscaleColors","colors"], outputs: ["activeColors"], body: (greyscaleMode,greyscaleColors,colors) => {
+// Use greyscale colors when mode is enabled
+const activeColors = greyscaleMode ? greyscaleColors : colors;
+return {activeColors};
+}});
+
 define({id: "b93b3c9c", inputs: ["hisco_dn_gender","startYear","endYear","hisco_dn_pages","dn_circulation","dn_price","dn_pages","af_stockholm","scb_population"], outputs: ["hisco_dn_gender_filtered","hisco_dn_pages_filtered","dn_circulation_filtered","dn_price_filtered","dn_pages_filtered","af_stockholm_filtered","scb_population_filtered"], body: (hisco_dn_gender,startYear,endYear,hisco_dn_pages,dn_circulation,dn_price,dn_pages,af_stockholm,scb_population) => {
 // Filter all data sources by selected year range
 const hisco_dn_gender_filtered = hisco_dn_gender.filter(d => d.year >= startYear && d.year <= endYear);
@@ -155,7 +170,7 @@ const scb_population_filtered = scb_population.filter(d => d.year >= startYear &
 return {hisco_dn_gender_filtered,hisco_dn_pages_filtered,dn_circulation_filtered,dn_price_filtered,dn_pages_filtered,af_stockholm_filtered,scb_population_filtered};
 }});
 
-define({id: "04f186a0", inputs: ["view","Inputs","hitsJobsSelection","hisco_dn_gender_filtered","colors","af_stockholm_filtered","scb_population_filtered","pagesSelection","hisco_dn_pages_filtered","dn_pages_filtered","circulationPriceSelection","dn_circulation_filtered","dn_price_filtered","downloadChartAsPNG","downloadCSV","downloadBibTeX","alert"], outputs: ["downloadAllPanels"], body: (view,Inputs,hitsJobsSelection,hisco_dn_gender_filtered,colors,af_stockholm_filtered,scb_population_filtered,pagesSelection,hisco_dn_pages_filtered,dn_pages_filtered,circulationPriceSelection,dn_circulation_filtered,dn_price_filtered,downloadChartAsPNG,downloadCSV,downloadBibTeX,alert) => {
+define({id: "2e800a1e", inputs: ["view","Inputs","hitsJobsSelection","hisco_dn_gender_filtered","activeColors","af_stockholm_filtered","scb_population_filtered","pagesSelection","hisco_dn_pages_filtered","dn_pages_filtered","circulationPriceSelection","dn_circulation_filtered","dn_price_filtered","downloadChartAsPNG","downloadCSV","downloadBibTeX","alert"], outputs: ["downloadAllPanels"], body: (view,Inputs,hitsJobsSelection,hisco_dn_gender_filtered,activeColors,af_stockholm_filtered,scb_population_filtered,pagesSelection,hisco_dn_pages_filtered,dn_pages_filtered,circulationPriceSelection,dn_circulation_filtered,dn_price_filtered,downloadChartAsPNG,downloadCSV,downloadBibTeX,alert) => {
 const downloadAllPanels = view(Inputs.button("📦 Download All Panels (9 files)", {
   reduce: () => {
     // Collect all data and series for each panel
@@ -177,7 +192,7 @@ const downloadAllPanels = view(Inputs.button("📦 Download All Panels (9 files)
           year: d.year,
           value: d.count,
           series: series.name,
-          color: colors[series.id]
+          color: activeColors[series.id]
         }));
         panel1Data.push(...data);
         panel1Series.push(series.name);
@@ -190,7 +205,7 @@ const downloadAllPanels = view(Inputs.button("📦 Download All Panels (9 files)
           year: d.year,
           value: d[field],
           series: series.name,
-          color: colors[series.id]
+          color: activeColors[series.id]
         }));
         panel1Data.push(...data);
         panel1Series.push(series.name);
@@ -200,7 +215,7 @@ const downloadAllPanels = view(Inputs.button("📦 Download All Panels (9 files)
           year: d.year,
           value: d[field],
           series: series.name,
-          color: colors[series.id]
+          color: activeColors[series.id]
         }));
         panel1Data.push(...data);
         panel1Series.push(series.name);
@@ -214,7 +229,7 @@ const downloadAllPanels = view(Inputs.button("📦 Download All Panels (9 files)
           year: d.year,
           value: d.pages,
           series: series.name,
-          color: colors[series.id]
+          color: activeColors[series.id]
         }));
         panel2Data.push(...data);
         panel2Series.push(series.name);
@@ -223,7 +238,7 @@ const downloadAllPanels = view(Inputs.button("📦 Download All Panels (9 files)
           year: d.year,
           value: d.pages_min,
           series: series.name,
-          color: colors[series.id]
+          color: activeColors[series.id]
         }));
         panel2Data.push(...data);
         panel2Series.push(series.name);
@@ -232,7 +247,7 @@ const downloadAllPanels = view(Inputs.button("📦 Download All Panels (9 files)
           year: d.year,
           value: d.pages_max,
           series: series.name,
-          color: colors[series.id]
+          color: activeColors[series.id]
         }));
         panel2Data.push(...data);
         panel2Series.push(series.name);
@@ -245,7 +260,7 @@ const downloadAllPanels = view(Inputs.button("📦 Download All Panels (9 files)
         year: d.year,
         value: d.circulation,
         series: "Circulation",
-        color: colors.circulation
+        color: activeColors.circulation
       }));
       panel3Data.push(...data);
       panel3Series.push("Circulation");
@@ -255,7 +270,7 @@ const downloadAllPanels = view(Inputs.button("📦 Download All Panels (9 files)
         year: d.year,
         value: d.price,
         series: "Price (öre)",
-        color: colors.price
+        color: activeColors.price
       }));
       panel3Data.push(...data);
       panel3Series.push("Price (öre)");
@@ -302,7 +317,7 @@ const downloadAllPanels = view(Inputs.button("📦 Download All Panels (9 files)
 return {downloadAllPanels};
 }});
 
-define({id: "226e243c", inputs: ["startYear","endYear","Plot","XMLSerializer","alert","URLSearchParams","prompt"], outputs: ["filterByGender","colors","globalXDomain","rule1906","label1906","chartWidth","chartHeight","margins","downloadChartAsPNG","downloadCSV","bibEntries","downloadBibTeX","downloadAll","sharePanel"], body: (startYear,endYear,Plot,XMLSerializer,alert,URLSearchParams,prompt) => {
+define({id: "3e2bba62", inputs: ["startYear","endYear","Plot","XMLSerializer","alert","greyscaleMode","URLSearchParams","prompt"], outputs: ["filterByGender","colors","greyscaleColors","linePatterns","globalXDomain","rule1906","label1906","chartWidth","chartHeight","margins","downloadChartAsPNG","downloadCSV","bibEntries","downloadBibTeX","downloadAll","sharePanel"], body: (startYear,endYear,Plot,XMLSerializer,alert,greyscaleMode,URLSearchParams,prompt) => {
 // Helper to filter by gender
 function filterByGender(data, gender) {
   return data.filter(d => d.gender === gender);
@@ -325,6 +340,44 @@ const colors = {
   price: "#ff9da7",
   stockholm_city: "#76b7b2",
   stockholm_county: "#af7aa1"
+};
+
+// Greyscale color scheme (for printing)
+const greyscaleColors = {
+  male_hits: "#1a1a1a",        // Very dark grey
+  female_hits: "#4d4d4d",      // Dark grey
+  both_hits: "#808080",        // Medium grey
+  digitized_pages: "#2b2b2b",  // Near black
+  page_count_min: "#5a5a5a",   // Dark medium grey
+  page_count_max: "#707070",   // Medium grey
+  male_apps: "#333333",        // Dark charcoal
+  male_vaca: "#666666",        // Medium charcoal
+  female_apps: "#404040",      // Dark slate grey
+  female_vaca: "#737373",      // Light medium grey
+  total_vacancies: "#595959",  // Dark grey
+  circulation: "#4a4a4a",      // Dark grey
+  price: "#7d7d7d",            // Light grey
+  stockholm_city: "#525252",   // Medium dark grey
+  stockholm_county: "#6e6e6e"  // Medium light grey
+};
+
+// Line patterns for greyscale mode (SVG strokeDasharray values)
+const linePatterns = {
+  male_hits: "",                  // Solid
+  female_hits: "8,4",            // Long dash
+  both_hits: "4,4",              // Medium dash
+  digitized_pages: "",           // Solid
+  page_count_min: "2,2",         // Dotted
+  page_count_max: "8,4,2,4",     // Dash-dot
+  male_apps: "12,4",             // Very long dash
+  male_vaca: "4,2",              // Short dash
+  female_apps: "6,3",            // Medium dash
+  female_vaca: "2,4",            // Sparse dotted
+  total_vacancies: "8,2,2,2",    // Dash-dot-dot
+  circulation: "10,5",           // Wide dash
+  price: "3,3",                  // Equal dash
+  stockholm_city: "6,2,2,2",     // Dash-dot
+  stockholm_county: "4,2,4,8"    // Complex pattern
 };
 
 // Use the selected year range as the global X-axis domain
@@ -413,16 +466,35 @@ function downloadChartAsPNG(container, filename) {
           // Draw legend items
           let yOffset = legendY + 15 * scale;
           legendItems.forEach(item => {
+            const svgLine = item.querySelector('svg line');
             const colorSpan = item.querySelector('span[style*="background"]');
             const textSpan = item.querySelector('span:last-child');
 
-            if (colorSpan && textSpan) {
-              const color = colorSpan.style.background;
+            if ((svgLine || colorSpan) && textSpan) {
               const text = textSpan.textContent;
 
-              // Draw color line
-              ctx.fillStyle = color;
-              ctx.fillRect(legendX + 10 * scale, yOffset, 24 * scale, 3 * scale);
+              if (svgLine) {
+                // Greyscale mode: Draw line with dash pattern
+                const color = svgLine.getAttribute('stroke');
+                const dashArray = svgLine.getAttribute('stroke-dasharray');
+
+                if (dashArray && dashArray !== '') {
+                  ctx.setLineDash(dashArray.split(',').map(n => parseFloat(n) * scale));
+                }
+
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 3 * scale;
+                ctx.beginPath();
+                ctx.moveTo(legendX + 10 * scale, yOffset + 6 * scale);
+                ctx.lineTo(legendX + 34 * scale, yOffset + 6 * scale);
+                ctx.stroke();
+                ctx.setLineDash([]);  // Reset
+              } else if (colorSpan) {
+                // Color mode: Draw filled rectangle
+                const color = colorSpan.style.background;
+                ctx.fillStyle = color;
+                ctx.fillRect(legendX + 10 * scale, yOffset, 24 * scale, 3 * scale);
+              }
 
               // Draw text
               ctx.fillStyle = "black";
@@ -454,18 +526,24 @@ function downloadCSV(data, filename) {
     return;
   }
 
-  // Get all unique keys from all objects (in case different series have different properties)
-  const allKeys = [...new Set(data.flatMap(obj => Object.keys(obj)))];
+  // Add pattern field based on seriesId (only in greyscale mode)
+  const enrichedData = data.map(row => ({
+    ...row,
+    pattern: greyscaleMode && row.seriesId ? linePatterns[row.seriesId] || "" : ""
+  }));
 
-  // Sort to ensure consistent column order: year, value, series, color
+  // Get all unique keys from all objects (in case different series have different properties)
+  const allKeys = [...new Set(enrichedData.flatMap(obj => Object.keys(obj)))];
+
+  // Sort to ensure consistent column order: year, value, series, color, pattern
   const headers = allKeys.sort((a, b) => {
-    const order = {year: 0, value: 1, series: 2, color: 3};
+    const order = {year: 0, value: 1, series: 2, color: 3, pattern: 4};
     return (order[a] ?? 99) - (order[b] ?? 99);
   });
 
   const csvContent = [
     headers.join(","),
-    ...data.map(row => headers.map(h => {
+    ...enrichedData.map(row => headers.map(h => {
       const val = row[h];
       // Handle null/undefined and escape strings with commas
       if (val === null || val === undefined) return "";
@@ -619,6 +697,7 @@ function sharePanel(panelId, seriesSelection) {
   params.set('start', startYear);
   params.set('end', endYear);
   params.set('anchor', panelId);
+  if (greyscaleMode) params.set('greyscale', 'true');
 
   if (panelId === 'panel1') {
     params.set('panel1', seriesSelection.map(s => s.id).join(','));
@@ -637,7 +716,7 @@ function sharePanel(panelId, seriesSelection) {
     prompt('Copy this link:', shareUrl);
   });
 }
-return {filterByGender,colors,globalXDomain,rule1906,label1906,chartWidth,chartHeight,margins,downloadChartAsPNG,downloadCSV,bibEntries,downloadBibTeX,downloadAll,sharePanel};
+return {filterByGender,colors,greyscaleColors,linePatterns,globalXDomain,rule1906,label1906,chartWidth,chartHeight,margins,downloadChartAsPNG,downloadCSV,bibEntries,downloadBibTeX,downloadAll,sharePanel};
 }});
 
 define({id: "479e3acf", inputs: ["urlParams","view","Inputs"], outputs: ["panel1Options","panel1InitialValue","hitsJobsSelection"], body: (urlParams,view,Inputs) => {
@@ -674,7 +753,7 @@ const hitsJobsSelection = view(Inputs.checkbox(
 return {panel1Options,panel1InitialValue,hitsJobsSelection};
 }});
 
-define({id: "2208b79d", inputs: ["hitsJobsSelection","filterByGender","hisco_dn_gender_filtered","colors","af_stockholm_filtered","scb_population_filtered","html","chartWidth","chartHeight","Plot","margins","globalXDomain","rule1906","label1906","sharePanel","downloadChartAsPNG","downloadCSV","downloadBibTeX","downloadAll","display"], body: (hitsJobsSelection,filterByGender,hisco_dn_gender_filtered,colors,af_stockholm_filtered,scb_population_filtered,html,chartWidth,chartHeight,Plot,margins,globalXDomain,rule1906,label1906,sharePanel,downloadChartAsPNG,downloadCSV,downloadBibTeX,downloadAll,display) => {
+define({id: "dca904f9", inputs: ["hitsJobsSelection","filterByGender","hisco_dn_gender_filtered","activeColors","af_stockholm_filtered","scb_population_filtered","html","chartWidth","chartHeight","Plot","margins","globalXDomain","greyscaleMode","linePatterns","rule1906","label1906","sharePanel","downloadChartAsPNG","downloadCSV","downloadBibTeX","downloadAll","display"], body: (hitsJobsSelection,filterByGender,hisco_dn_gender_filtered,activeColors,af_stockholm_filtered,scb_population_filtered,html,chartWidth,chartHeight,Plot,margins,globalXDomain,greyscaleMode,linePatterns,rule1906,label1906,sharePanel,downloadChartAsPNG,downloadCSV,downloadBibTeX,downloadAll,display) => {
 if (hitsJobsSelection.length > 0) {
   const leftAxisSeries = hitsJobsSelection.filter(s => s.axis === "left");
   const rightAxisSeries = hitsJobsSelection.filter(s => s.axis === "right");
@@ -688,7 +767,8 @@ if (hitsJobsSelection.length > 0) {
           year: d.year,
           value: d.count,
           series: "Male Hits",
-          color: colors.male_hits
+          seriesId: "male_hits",
+          color: activeColors.male_hits
         })));
         break;
       case "female_hits":
@@ -696,7 +776,8 @@ if (hitsJobsSelection.length > 0) {
           year: d.year,
           value: d.count,
           series: "Female Hits",
-          color: colors.female_hits
+          seriesId: "female_hits",
+          color: activeColors.female_hits
         })));
         break;
       case "both_hits":
@@ -704,7 +785,8 @@ if (hitsJobsSelection.length > 0) {
           year: d.year,
           value: d.count,
           series: "Both/Ungendered",
-          color: colors.both_hits
+          seriesId: "both_hits",
+          color: activeColors.both_hits
         })));
         break;
     }
@@ -719,7 +801,8 @@ if (hitsJobsSelection.length > 0) {
           year: d.year,
           value: d.male_apps,
           series: "Male Applications",
-          color: colors.male_apps
+          seriesId: "male_apps",
+          color: activeColors.male_apps
         })));
         break;
       case "male_vaca":
@@ -727,7 +810,8 @@ if (hitsJobsSelection.length > 0) {
           year: d.year,
           value: d.male_vaca,
           series: "Male Vacancies",
-          color: colors.male_vaca
+          seriesId: "male_vaca",
+          color: activeColors.male_vaca
         })));
         break;
       case "female_apps":
@@ -735,7 +819,8 @@ if (hitsJobsSelection.length > 0) {
           year: d.year,
           value: d.female_apps,
           series: "Female Applications",
-          color: colors.female_apps
+          seriesId: "female_apps",
+          color: activeColors.female_apps
         })));
         break;
       case "female_vaca":
@@ -743,7 +828,8 @@ if (hitsJobsSelection.length > 0) {
           year: d.year,
           value: d.female_vaca,
           series: "Female Vacancies",
-          color: colors.female_vaca
+          seriesId: "female_vaca",
+          color: activeColors.female_vaca
         })));
         break;
       case "total_vacancies":
@@ -751,7 +837,8 @@ if (hitsJobsSelection.length > 0) {
           year: d.year,
           value: d.total_vacancies,
           series: "Total Vacancies",
-          color: colors.total_vacancies
+          seriesId: "total_vacancies",
+          color: activeColors.total_vacancies
         })));
         break;
       case "stockholm_city":
@@ -759,7 +846,8 @@ if (hitsJobsSelection.length > 0) {
           year: d.year,
           value: d.stockholm_city,
           series: "Stockholm City Population",
-          color: colors.stockholm_city
+          seriesId: "stockholm_city",
+          color: activeColors.stockholm_city
         })));
         break;
       case "stockholm_county":
@@ -767,7 +855,8 @@ if (hitsJobsSelection.length > 0) {
           year: d.year,
           value: d.stockholm_county,
           series: "Stockholm County Population",
-          color: colors.stockholm_county
+          seriesId: "stockholm_county",
+          color: activeColors.stockholm_county
         })));
         break;
     }
@@ -792,7 +881,22 @@ if (hitsJobsSelection.length > 0) {
 
       marks: [
 
-        Plot.line(leftData, {x: "year", y: "value", stroke: "color", z: "series", strokeWidth: 2.5, tip: true}),
+        ...(greyscaleMode
+          ? // Greyscale mode: Multiple marks with strokeDasharray
+            Array.from(new Set(leftData.map(d => d.seriesId))).map(seriesId => {
+              const seriesData = leftData.filter(d => d.seriesId === seriesId);
+              return Plot.line(seriesData, {
+                x: "year",
+                y: "value",
+                stroke: seriesData[0]?.color,
+                strokeWidth: 2.5,
+                strokeDasharray: linePatterns[seriesId] || "",
+                tip: true
+              });
+            })
+          : // Color mode: Single mark with color channel
+            [Plot.line(leftData, {x: "year", y: "value", stroke: "color", z: "series", strokeWidth: 2.5, tip: true})]
+        ),
         Plot.dot(leftData.filter(d => d.value != null), {x: "year", y: "value", fill: "color", z: "series", r: 2})
       ]
     });
@@ -827,7 +931,22 @@ if (hitsJobsSelection.length > 0) {
       marks: [
         leftData.length === 0 ? rule1906 : null,
         leftData.length === 0 ? label1906 : null,
-        Plot.line(rightData, {x: "year", y: "value", stroke: "color", z: "series", strokeWidth: 2.5, tip: true}),
+        ...(greyscaleMode
+          ? // Greyscale mode: Multiple marks with strokeDasharray
+            Array.from(new Set(rightData.map(d => d.seriesId))).map(seriesId => {
+              const seriesData = rightData.filter(d => d.seriesId === seriesId);
+              return Plot.line(seriesData, {
+                x: "year",
+                y: "value",
+                stroke: seriesData[0]?.color,
+                strokeWidth: 2.5,
+                strokeDasharray: linePatterns[seriesId] || "",
+                tip: true
+              });
+            })
+          : // Color mode: Single mark with color channel
+            [Plot.line(rightData, {x: "year", y: "value", stroke: "color", z: "series", strokeWidth: 2.5, tip: true})]
+        ),
         Plot.dot(rightData.filter(d => d.value != null), {x: "year", y: "value", fill: "color", z: "series", r: 2})
       ].filter(Boolean)
     });
@@ -844,8 +963,8 @@ if (hitsJobsSelection.length > 0) {
 
   // Create unified legend with all series
   const allLegendItems = [
-    ...leftData.map(d => ({series: d.series, color: d.color})),
-    ...rightData.map(d => ({series: d.series, color: d.color}))
+    ...leftData.map(d => ({series: d.series, seriesId: d.seriesId, color: d.color})),
+    ...rightData.map(d => ({series: d.series, seriesId: d.seriesId, color: d.color}))
   ];
   const uniqueLegendItems = [];
   const seen = new Set();
@@ -858,7 +977,15 @@ if (hitsJobsSelection.length > 0) {
 
   const legend = html`<div style="background: rgba(255,255,255,0.9); padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 12px; align-self: flex-start;">
     ${uniqueLegendItems.map(item => html`<div style="margin: 4px 0; display: flex; align-items: center; white-space: nowrap;">
-      <span style="display: inline-block; width: 24px; height: 3px; background: ${item.color}; margin-right: 8px;"></span>
+      ${greyscaleMode
+        ? html`<svg width="24" height="12" style="margin-right: 8px;">
+            <line x1="0" y1="6" x2="24" y2="6"
+                  stroke="${item.color}"
+                  stroke-width="3"
+                  stroke-dasharray="${linePatterns[item.seriesId] || ''}" />
+          </svg>`
+        : html`<span style="display: inline-block; width: 24px; height: 3px; background: ${item.color}; margin-right: 8px;"></span>`
+      }
       <span>${item.series}</span>
     </div>`)}
   </div>`;
@@ -922,7 +1049,7 @@ const pagesSelection = view(Inputs.checkbox(
 return {panel2Options,panel2InitialValue,pagesSelection};
 }});
 
-define({id: "b6987327", inputs: ["pagesSelection","hisco_dn_pages_filtered","colors","dn_pages_filtered","margins","html","chartWidth","chartHeight","Plot","globalXDomain","rule1906","label1906","sharePanel","downloadChartAsPNG","downloadCSV","downloadBibTeX","downloadAll","display"], body: (pagesSelection,hisco_dn_pages_filtered,colors,dn_pages_filtered,margins,html,chartWidth,chartHeight,Plot,globalXDomain,rule1906,label1906,sharePanel,downloadChartAsPNG,downloadCSV,downloadBibTeX,downloadAll,display) => {
+define({id: "8b85de4f", inputs: ["pagesSelection","hisco_dn_pages_filtered","activeColors","dn_pages_filtered","margins","html","chartWidth","chartHeight","Plot","globalXDomain","greyscaleMode","linePatterns","rule1906","label1906","sharePanel","downloadChartAsPNG","downloadCSV","downloadBibTeX","downloadAll","display"], body: (pagesSelection,hisco_dn_pages_filtered,activeColors,dn_pages_filtered,margins,html,chartWidth,chartHeight,Plot,globalXDomain,greyscaleMode,linePatterns,rule1906,label1906,sharePanel,downloadChartAsPNG,downloadCSV,downloadBibTeX,downloadAll,display) => {
 if (pagesSelection.length > 0) {
   const leftAxisSeries = pagesSelection.filter(s => s.axis === "left");
   const rightAxisSeries = pagesSelection.filter(s => s.axis === "right");
@@ -935,7 +1062,8 @@ if (pagesSelection.length > 0) {
         year: d.year,
         value: d.pages,
         series: "Digitized Pages",
-        color: colors.digitized_pages
+        seriesId: "digitized_pages",
+        color: activeColors.digitized_pages
       })));
     }
   });
@@ -948,14 +1076,16 @@ if (pagesSelection.length > 0) {
         year: d.year,
         value: d.pages_min,
         series: "Page Count (Min)",
-        color: colors.page_count_min
+        seriesId: "page_count_min",
+        color: activeColors.page_count_min
       })));
     } else if (series.id === "page_count_max") {
       rightData.push(...dn_pages_filtered.map(d => ({
         year: d.year,
         value: d.pages_max,
         series: "Page Count (Max)",
-        color: colors.page_count_max
+        seriesId: "page_count_max",
+        color: activeColors.page_count_max
       })));
     }
   });
@@ -983,7 +1113,22 @@ if (pagesSelection.length > 0) {
 
       marks: [
 
-        Plot.line(leftData, {x: "year", y: "value", stroke: "color", z: "series", strokeWidth: 2.5, tip: true}),
+        ...(greyscaleMode
+          ? // Greyscale mode: Multiple marks with strokeDasharray
+            Array.from(new Set(leftData.map(d => d.seriesId))).map(seriesId => {
+              const seriesData = leftData.filter(d => d.seriesId === seriesId);
+              return Plot.line(seriesData, {
+                x: "year",
+                y: "value",
+                stroke: seriesData[0]?.color,
+                strokeWidth: 2.5,
+                strokeDasharray: linePatterns[seriesId] || "",
+                tip: true
+              });
+            })
+          : // Color mode: Single mark with color channel
+            [Plot.line(leftData, {x: "year", y: "value", stroke: "color", z: "series", strokeWidth: 2.5, tip: true})]
+        ),
         Plot.dot(leftData.filter(d => d.value != null), {x: "year", y: "value", fill: "color", z: "series", r: 2})
       ]
     });
@@ -1017,7 +1162,22 @@ if (pagesSelection.length > 0) {
       marks: [
         leftData.length === 0 ? rule1906 : null,
         leftData.length === 0 ? label1906 : null,
-        Plot.line(rightData, {x: "year", y: "value", stroke: "color", z: "series", strokeWidth: 2.5, tip: true}),
+        ...(greyscaleMode
+          ? // Greyscale mode: Multiple marks with strokeDasharray
+            Array.from(new Set(rightData.map(d => d.seriesId))).map(seriesId => {
+              const seriesData = rightData.filter(d => d.seriesId === seriesId);
+              return Plot.line(seriesData, {
+                x: "year",
+                y: "value",
+                stroke: seriesData[0]?.color,
+                strokeWidth: 2.5,
+                strokeDasharray: linePatterns[seriesId] || "",
+                tip: true
+              });
+            })
+          : // Color mode: Single mark with color channel
+            [Plot.line(rightData, {x: "year", y: "value", stroke: "color", z: "series", strokeWidth: 2.5, tip: true})]
+        ),
         Plot.dot(rightData.filter(d => d.value != null), {x: "year", y: "value", fill: "color", z: "series", r: 2})
       ].filter(Boolean)
     });
@@ -1034,8 +1194,8 @@ if (pagesSelection.length > 0) {
 
   // Create unified legend with all series
   const allLegendItems = [
-    ...leftData.map(d => ({series: d.series, color: d.color})),
-    ...rightData.map(d => ({series: d.series, color: d.color}))
+    ...leftData.map(d => ({series: d.series, seriesId: d.seriesId, color: d.color})),
+    ...rightData.map(d => ({series: d.series, seriesId: d.seriesId, color: d.color}))
   ];
   const uniqueLegendItems = [];
   const seen = new Set();
@@ -1048,7 +1208,15 @@ if (pagesSelection.length > 0) {
 
   const legend = html`<div style="background: rgba(255,255,255,0.9); padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 12px; align-self: flex-start;">
     ${uniqueLegendItems.map(item => html`<div style="margin: 4px 0; display: flex; align-items: center; white-space: nowrap;">
-      <span style="display: inline-block; width: 24px; height: 3px; background: ${item.color}; margin-right: 8px;"></span>
+      ${greyscaleMode
+        ? html`<svg width="24" height="12" style="margin-right: 8px;">
+            <line x1="0" y1="6" x2="24" y2="6"
+                  stroke="${item.color}"
+                  stroke-width="3"
+                  stroke-dasharray="${linePatterns[item.seriesId] || ''}" />
+          </svg>`
+        : html`<span style="display: inline-block; width: 24px; height: 3px; background: ${item.color}; margin-right: 8px;"></span>`
+      }
       <span>${item.series}</span>
     </div>`)}
   </div>`;
@@ -1107,7 +1275,7 @@ const circulationPriceSelection = view(Inputs.checkbox(
 return {panel3Options,panel3InitialValue,circulationPriceSelection};
 }});
 
-define({id: "92aa88c5", inputs: ["circulationPriceSelection","dn_circulation_filtered","colors","dn_price_filtered","html","chartWidth","chartHeight","Plot","margins","globalXDomain","rule1906","label1906","sharePanel","downloadChartAsPNG","downloadCSV","downloadBibTeX","downloadAll","display"], body: (circulationPriceSelection,dn_circulation_filtered,colors,dn_price_filtered,html,chartWidth,chartHeight,Plot,margins,globalXDomain,rule1906,label1906,sharePanel,downloadChartAsPNG,downloadCSV,downloadBibTeX,downloadAll,display) => {
+define({id: "5da8e4b6", inputs: ["circulationPriceSelection","dn_circulation_filtered","activeColors","dn_price_filtered","html","chartWidth","chartHeight","Plot","margins","globalXDomain","greyscaleMode","linePatterns","rule1906","label1906","sharePanel","downloadChartAsPNG","downloadCSV","downloadBibTeX","downloadAll","display"], body: (circulationPriceSelection,dn_circulation_filtered,activeColors,dn_price_filtered,html,chartWidth,chartHeight,Plot,margins,globalXDomain,greyscaleMode,linePatterns,rule1906,label1906,sharePanel,downloadChartAsPNG,downloadCSV,downloadBibTeX,downloadAll,display) => {
 if (circulationPriceSelection.length > 0) {
   const hasCirculation = circulationPriceSelection.includes("circulation");
   const hasPrice = circulationPriceSelection.includes("price");
@@ -1117,7 +1285,8 @@ if (circulationPriceSelection.length > 0) {
     year: d.year,
     value: d.circulation,
     series: "Circulation",
-    color: colors.circulation,
+    seriesId: "circulation",
+    color: activeColors.circulation,
     axis: "left"
   })) : [];
 
@@ -1125,7 +1294,8 @@ if (circulationPriceSelection.length > 0) {
     year: d.year,
     value: d.price,
     series: "Price (öre)",
-    color: colors.price,
+    seriesId: "price",
+    color: activeColors.price,
     axis: "right"
   })) : [];
 
@@ -1148,7 +1318,22 @@ if (circulationPriceSelection.length > 0) {
 
       marks: [
 
-        Plot.line(circulationData, {x: "year", y: "value", stroke: "color", strokeWidth: 2.5, tip: true}),
+        ...(greyscaleMode
+          ? // Greyscale mode: Multiple marks with strokeDasharray
+            Array.from(new Set(circulationData.map(d => d.seriesId))).map(seriesId => {
+              const seriesData = circulationData.filter(d => d.seriesId === seriesId);
+              return Plot.line(seriesData, {
+                x: "year",
+                y: "value",
+                stroke: seriesData[0]?.color,
+                strokeWidth: 2.5,
+                strokeDasharray: linePatterns[seriesId] || "",
+                tip: true
+              });
+            })
+          : // Color mode: Single mark with color channel
+            [Plot.line(circulationData, {x: "year", y: "value", stroke: "color", strokeWidth: 2.5, tip: true})]
+        ),
         Plot.dot(circulationData.filter(d => d.value != null), {x: "year", y: "value", fill: "color", r: 2})
       ]
     });
@@ -1183,7 +1368,22 @@ if (circulationPriceSelection.length > 0) {
       marks: [
         hasCirculation ? null : rule1906,
         hasCirculation ? null : label1906,
-        Plot.line(priceData, {x: "year", y: "value", stroke: "color", strokeWidth: 2.5, tip: true}),
+        ...(greyscaleMode
+          ? // Greyscale mode: Multiple marks with strokeDasharray
+            Array.from(new Set(priceData.map(d => d.seriesId))).map(seriesId => {
+              const seriesData = priceData.filter(d => d.seriesId === seriesId);
+              return Plot.line(seriesData, {
+                x: "year",
+                y: "value",
+                stroke: seriesData[0]?.color,
+                strokeWidth: 2.5,
+                strokeDasharray: linePatterns[seriesId] || "",
+                tip: true
+              });
+            })
+          : // Color mode: Single mark with color channel
+            [Plot.line(priceData, {x: "year", y: "value", stroke: "color", strokeWidth: 2.5, tip: true})]
+        ),
         Plot.dot(priceData.filter(d => d.value != null), {x: "year", y: "value", fill: "color", r: 2})
       ].filter(Boolean)
     });
@@ -1201,8 +1401,8 @@ if (circulationPriceSelection.length > 0) {
 
   // Create unified legend with all series
   const allLegendItems = [
-    ...circulationData.map(d => ({series: d.series, color: d.color})),
-    ...priceData.map(d => ({series: d.series, color: d.color}))
+    ...circulationData.map(d => ({series: d.series, seriesId: d.seriesId, color: d.color})),
+    ...priceData.map(d => ({series: d.series, seriesId: d.seriesId, color: d.color}))
   ];
   const uniqueLegendItems = [];
   const seen = new Set();
@@ -1215,7 +1415,15 @@ if (circulationPriceSelection.length > 0) {
 
   const legend = html`<div style="background: rgba(255,255,255,0.9); padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 12px; align-self: flex-start;">
     ${uniqueLegendItems.map(item => html`<div style="margin: 4px 0; display: flex; align-items: center; white-space: nowrap;">
-      <span style="display: inline-block; width: 24px; height: 3px; background: ${item.color}; margin-right: 8px;"></span>
+      ${greyscaleMode
+        ? html`<svg width="24" height="12" style="margin-right: 8px;">
+            <line x1="0" y1="6" x2="24" y2="6"
+                  stroke="${item.color}"
+                  stroke-width="3"
+                  stroke-dasharray="${linePatterns[item.seriesId] || ''}" />
+          </svg>`
+        : html`<span style="display: inline-block; width: 24px; height: 3px; background: ${item.color}; margin-right: 8px;"></span>`
+      }
       <span>${item.series}</span>
     </div>`)}
   </div>`;
@@ -1267,7 +1475,7 @@ if (circulationPriceSelection.length > 0) {
 economic history the labour market in Sweden, and is highly
 preliminary.</p>
 <div class="observablehq observablehq--block"><!--:970f4173:--></div>
-<div class="observablehq observablehq--block"><!--:dbe68ae1:--></div>
+<div class="observablehq observablehq--block"><!--:0887378b:--></div>
 <div class="observablehq observablehq--block"><!--:d57d8fa4:--></div>
 <hr>
 <h2 id="timeline-filter" tabindex="-1"><a class="observablehq-header-anchor" href="#timeline-filter">Timeline Filter</a></h2>
@@ -1283,26 +1491,28 @@ preliminary.</p>
 <div class="observablehq observablehq--block"><!--:39625eb0:--></div>
 </div>
 </div>
+<div class="observablehq observablehq--block"><!--:66b91651:--></div>
+<div class="observablehq observablehq--block"><!--:6a1d2ba3:--></div>
 <div class="observablehq observablehq--block"><!--:b93b3c9c:--></div>
 <hr>
 <h2 id="download-all-data" tabindex="-1"><a class="observablehq-header-anchor" href="#download-all-data">Download All Data</a></h2>
 <p>Download all visualizations, data, and citations at once:</p>
-<div class="observablehq observablehq--block"><!--:04f186a0:--></div>
+<div class="observablehq observablehq--block"><!--:2e800a1e:--></div>
 <hr>
 <h2 id="visualization" tabindex="-1"><a class="observablehq-header-anchor" href="#visualization">Visualization</a></h2>
-<div class="observablehq observablehq--block"><!--:226e243c:--></div>
+<div class="observablehq observablehq--block"><!--:3e2bba62:--></div>
 <h3 id="panel1"><a class="observablehq-header-anchor" href="#panel1">Panel 1: Job Ad Hits &amp; Employment</a></h3>
 <p><strong>Select data series:</strong></p>
 <div class="observablehq observablehq--block"><!--:479e3acf:--></div>
-<div class="observablehq observablehq--block"><!--:2208b79d:--></div>
+<div class="observablehq observablehq--block"><!--:dca904f9:--></div>
 <h3 id="panel2"><a class="observablehq-header-anchor" href="#panel2">Panel 2: Digitized Pages &amp; Page Count</a></h3>
 <p><strong>Select data series:</strong></p>
 <div class="observablehq observablehq--block"><!--:5fed992d:--></div>
-<div class="observablehq observablehq--block"><!--:b6987327:--></div>
+<div class="observablehq observablehq--block"><!--:8b85de4f:--></div>
 <h3 id="panel3"><a class="observablehq-header-anchor" href="#panel3">Panel 3: Circulation &amp; Price</a></h3>
 <p><strong>Select data series:</strong></p>
 <div class="observablehq observablehq--block"><!--:2c70321c:--></div>
-<div class="observablehq observablehq--block"><!--:92aa88c5:--></div>
+<div class="observablehq observablehq--block"><!--:5da8e4b6:--></div>
 <hr>
 <h2 id="data-notes" tabindex="-1"><a class="observablehq-header-anchor" href="#data-notes">Data Notes</a></h2>
 <ul>
@@ -1351,7 +1561,7 @@ preliminary.</p>
 <p><strong>Data Repository:</strong> <a href="https://github.com/JobAdsData/scb-befolkning-sthlm" target="_blank" rel="noopener noreferrer">https://github.com/JobAdsData/scb-befolkning-sthlm</a></p>
 </main>
 <footer id="observablehq-footer">
-<div>Built with <a href="https://observablehq.com/framework/" target="_blank" rel="noopener noreferrer">Observable Framework</a> and <a href="https://claude.ai/code" target="_blank" rel="noopener noreferrer">Claude Code</a> • Last updated: 2025-10-18</div>
+<div>Built with <a href="https://observablehq.com/framework/" target="_blank" rel="noopener noreferrer">Observable Framework</a> and <a href="https://claude.ai/code" target="_blank" rel="noopener noreferrer">Claude Code</a> • Last updated: 2025-12-17</div>
 </footer>
 </div>
 </body>
