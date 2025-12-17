@@ -66,6 +66,7 @@ registerFile("./data/dn_pages.csv", {"name":"./data/dn_pages.csv","mimeType":"te
 registerFile("./data/dn_price.csv", {"name":"./data/dn_price.csv","mimeType":"text/csv","path":"./_file/data/dn_price.bae2061c.csv","lastModified":1760477144270,"size":1330});
 registerFile("./data/hisco_dn_gender.csv", {"name":"./data/hisco_dn_gender.csv","mimeType":"text/csv","path":"./_file/data/hisco_dn_gender.66a475e2.csv","lastModified":1760477143822,"size":14194});
 registerFile("./data/hisco_dn_pages.csv", {"name":"./data/hisco_dn_pages.csv","mimeType":"text/csv","path":"./_file/data/hisco_dn_pages.320bcfb6.csv","lastModified":1760477143884,"size":1445});
+registerFile("./data/hisco_kb_pages.csv", {"name":"./data/hisco_kb_pages.csv","mimeType":"text/csv","path":"./_file/data/hisco_kb_pages.c624378f.csv","lastModified":1760477143853,"size":1730});
 registerFile("./data/scb_population.csv", {"name":"./data/scb_population.csv","mimeType":"text/csv","path":"./_file/data/scb_population.e407aeea.csv","lastModified":1760524541301,"size":834});
 
 define({id: "970f4173", outputs: ["Plot"], body: async () => {
@@ -108,16 +109,17 @@ if (urlParams.anchor) {
 return {getUrlParams,urlParams};
 }});
 
-define({id: "d57d8fa4", inputs: ["FileAttachment"], outputs: ["hisco_dn_gender","hisco_dn_pages","dn_circulation","dn_price","dn_pages","af_stockholm","scb_population"], body: async (FileAttachment) => {
+define({id: "c0b5036e", inputs: ["FileAttachment"], outputs: ["hisco_dn_gender","hisco_dn_pages","hisco_kb_pages","dn_circulation","dn_price","dn_pages","af_stockholm","scb_population"], body: async (FileAttachment) => {
 // Load all data files
 const hisco_dn_gender = await FileAttachment("./data/hisco_dn_gender.csv").csv({typed: true});
 const hisco_dn_pages = await FileAttachment("./data/hisco_dn_pages.csv").csv({typed: true});
+const hisco_kb_pages = await FileAttachment("./data/hisco_kb_pages.csv").csv({typed: true});
 const dn_circulation = await FileAttachment("./data/dn_circulation.csv").csv({typed: true});
 const dn_price = await FileAttachment("./data/dn_price.csv").csv({typed: true});
 const dn_pages = await FileAttachment("./data/dn_pages.csv").csv({typed: true});
 const af_stockholm = await FileAttachment("./data/af_stockholm.csv").csv({typed: true});
 const scb_population = await FileAttachment("./data/scb_population.csv").csv({typed: true});
-return {hisco_dn_gender,hisco_dn_pages,dn_circulation,dn_price,dn_pages,af_stockholm,scb_population};
+return {hisco_dn_gender,hisco_dn_pages,hisco_kb_pages,dn_circulation,dn_price,dn_pages,af_stockholm,scb_population};
 }});
 
 define({id: "93cd2ad3", inputs: ["view","Inputs","urlParams"], outputs: ["startYear"], body: (view,Inputs,urlParams) => {
@@ -158,19 +160,20 @@ const activeColors = greyscaleMode ? greyscaleColors : colors;
 return {activeColors};
 }});
 
-define({id: "b93b3c9c", inputs: ["hisco_dn_gender","startYear","endYear","hisco_dn_pages","dn_circulation","dn_price","dn_pages","af_stockholm","scb_population"], outputs: ["hisco_dn_gender_filtered","hisco_dn_pages_filtered","dn_circulation_filtered","dn_price_filtered","dn_pages_filtered","af_stockholm_filtered","scb_population_filtered"], body: (hisco_dn_gender,startYear,endYear,hisco_dn_pages,dn_circulation,dn_price,dn_pages,af_stockholm,scb_population) => {
+define({id: "456cde67", inputs: ["hisco_dn_gender","startYear","endYear","hisco_dn_pages","hisco_kb_pages","dn_circulation","dn_price","dn_pages","af_stockholm","scb_population"], outputs: ["hisco_dn_gender_filtered","hisco_dn_pages_filtered","hisco_kb_pages_filtered","dn_circulation_filtered","dn_price_filtered","dn_pages_filtered","af_stockholm_filtered","scb_population_filtered"], body: (hisco_dn_gender,startYear,endYear,hisco_dn_pages,hisco_kb_pages,dn_circulation,dn_price,dn_pages,af_stockholm,scb_population) => {
 // Filter all data sources by selected year range
 const hisco_dn_gender_filtered = hisco_dn_gender.filter(d => d.year >= startYear && d.year <= endYear);
 const hisco_dn_pages_filtered = hisco_dn_pages.filter(d => d.year >= startYear && d.year <= endYear);
+const hisco_kb_pages_filtered = hisco_kb_pages.filter(d => d.year >= startYear && d.year <= endYear);
 const dn_circulation_filtered = dn_circulation.filter(d => d.year >= startYear && d.year <= endYear);
 const dn_price_filtered = dn_price.filter(d => d.year >= startYear && d.year <= endYear);
 const dn_pages_filtered = dn_pages.filter(d => d.year >= startYear && d.year <= endYear);
 const af_stockholm_filtered = af_stockholm.filter(d => d.year >= startYear && d.year <= endYear);
 const scb_population_filtered = scb_population.filter(d => d.year >= startYear && d.year <= endYear);
-return {hisco_dn_gender_filtered,hisco_dn_pages_filtered,dn_circulation_filtered,dn_price_filtered,dn_pages_filtered,af_stockholm_filtered,scb_population_filtered};
+return {hisco_dn_gender_filtered,hisco_dn_pages_filtered,hisco_kb_pages_filtered,dn_circulation_filtered,dn_price_filtered,dn_pages_filtered,af_stockholm_filtered,scb_population_filtered};
 }});
 
-define({id: "2e800a1e", inputs: ["view","Inputs","hitsJobsSelection","hisco_dn_gender_filtered","activeColors","af_stockholm_filtered","scb_population_filtered","pagesSelection","hisco_dn_pages_filtered","dn_pages_filtered","circulationPriceSelection","dn_circulation_filtered","dn_price_filtered","downloadChartAsPNG","downloadCSV","downloadBibTeX","alert"], outputs: ["downloadAllPanels"], body: (view,Inputs,hitsJobsSelection,hisco_dn_gender_filtered,activeColors,af_stockholm_filtered,scb_population_filtered,pagesSelection,hisco_dn_pages_filtered,dn_pages_filtered,circulationPriceSelection,dn_circulation_filtered,dn_price_filtered,downloadChartAsPNG,downloadCSV,downloadBibTeX,alert) => {
+define({id: "103f69e6", inputs: ["view","Inputs","hitsJobsSelection","hisco_dn_gender_filtered","activeColors","af_stockholm_filtered","scb_population_filtered","pagesSelection","hisco_dn_pages_filtered","hisco_kb_pages_filtered","dn_pages_filtered","circulationPriceSelection","dn_circulation_filtered","dn_price_filtered","downloadChartAsPNG","downloadCSV","downloadBibTeX","alert"], outputs: ["downloadAllPanels"], body: (view,Inputs,hitsJobsSelection,hisco_dn_gender_filtered,activeColors,af_stockholm_filtered,scb_population_filtered,pagesSelection,hisco_dn_pages_filtered,hisco_kb_pages_filtered,dn_pages_filtered,circulationPriceSelection,dn_circulation_filtered,dn_price_filtered,downloadChartAsPNG,downloadCSV,downloadBibTeX,alert) => {
 const downloadAllPanels = view(Inputs.button("📦 Download All Panels (9 files)", {
   reduce: () => {
     // Collect all data and series for each panel
@@ -226,6 +229,15 @@ const downloadAllPanels = view(Inputs.button("📦 Download All Panels (9 files)
     pagesSelection.forEach(series => {
       if (series.id === "digitized_pages") {
         const data = hisco_dn_pages_filtered.map(d => ({
+          year: d.year,
+          value: d.pages,
+          series: series.name,
+          color: activeColors[series.id]
+        }));
+        panel2Data.push(...data);
+        panel2Series.push(series.name);
+      } else if (series.id === "kb_digitized_pages") {
+        const data = hisco_kb_pages_filtered.map(d => ({
           year: d.year,
           value: d.pages,
           series: series.name,
@@ -317,7 +329,7 @@ const downloadAllPanels = view(Inputs.button("📦 Download All Panels (9 files)
 return {downloadAllPanels};
 }});
 
-define({id: "3e2bba62", inputs: ["startYear","endYear","Plot","XMLSerializer","alert","greyscaleMode","URLSearchParams","prompt"], outputs: ["filterByGender","colors","greyscaleColors","linePatterns","globalXDomain","rule1906","label1906","chartWidth","chartHeight","margins","downloadChartAsPNG","downloadCSV","bibEntries","downloadBibTeX","downloadAll","sharePanel"], body: (startYear,endYear,Plot,XMLSerializer,alert,greyscaleMode,URLSearchParams,prompt) => {
+define({id: "f0cea055", inputs: ["startYear","endYear","Plot","XMLSerializer","alert","greyscaleMode","URLSearchParams","prompt"], outputs: ["filterByGender","colors","greyscaleColors","linePatterns","globalXDomain","rule1906","label1906","chartWidth","chartHeight","margins","downloadChartAsPNG","downloadCSV","bibEntries","downloadBibTeX","downloadAll","sharePanel"], body: (startYear,endYear,Plot,XMLSerializer,alert,greyscaleMode,URLSearchParams,prompt) => {
 // Helper to filter by gender
 function filterByGender(data, gender) {
   return data.filter(d => d.gender === gender);
@@ -328,7 +340,8 @@ const colors = {
   male_hits: "#59a14f",
   female_hits: "#e15759",
   both_hits: "#f28e2c",
-  digitized_pages: "#4e79a7",
+  digitized_pages: "#283adcff",
+  kb_digitized_pages: "#e23535ff",
   page_count_min: "#9c6644",
   page_count_max: "#c85200",
   male_apps: "#1f77b4",
@@ -348,6 +361,7 @@ const greyscaleColors = {
   female_hits: "#4d4d4d",      // Dark grey
   both_hits: "#808080",        // Medium grey
   digitized_pages: "#2b2b2b",  // Near black
+  kb_digitized_pages: "#3d3d3d",  // Dark grey
   page_count_min: "#5a5a5a",   // Dark medium grey
   page_count_max: "#707070",   // Medium grey
   male_apps: "#333333",        // Dark charcoal
@@ -367,6 +381,7 @@ const linePatterns = {
   female_hits: "8,4",            // Long dash
   both_hits: "4,4",              // Medium dash
   digitized_pages: "",           // Solid
+  kb_digitized_pages: "6,3",     // Medium dash
   page_count_min: "2,2",         // Dotted
   page_count_max: "8,4,2,4",     // Dash-dot
   male_apps: "12,4",             // Very long dash
@@ -1026,16 +1041,17 @@ if (hitsJobsSelection.length > 0) {
 }
 }});
 
-define({id: "5fed992d", inputs: ["urlParams","view","Inputs"], outputs: ["panel2Options","panel2InitialValue","pagesSelection"], body: (urlParams,view,Inputs) => {
+define({id: "aa3161e7", inputs: ["urlParams","view","Inputs"], outputs: ["panel2Options","panel2InitialValue","pagesSelection"], body: (urlParams,view,Inputs) => {
 const panel2Options = [
-  {id: "digitized_pages", name: "Digitized Pages", axis: "left"},
-  {id: "page_count_min", name: "Page Count (Min)", axis: "right"},
-  {id: "page_count_max", name: "Page Count (Max)", axis: "right"}
+  {id: "digitized_pages", name: "Dagens Nyheter", axis: "left"},
+  {id: "kb_digitized_pages", name: "All of KB", axis: "left"},
+  {id: "page_count_min", name: "Page Count DN (Min)", axis: "right"},
+  {id: "page_count_max", name: "Page Count DN (Max)", axis: "right"}
 ];
 
 const panel2InitialValue = urlParams.panel2
   ? panel2Options.filter(opt => urlParams.panel2.includes(opt.id))
-  : [{id: "digitized_pages", name: "Digitized Pages", axis: "left"}];
+  : [{id: "digitized_pages", name: "Dagens Nyheter", axis: "left"}];
 
 const pagesSelection = view(Inputs.checkbox(
   panel2Options,
@@ -1049,7 +1065,7 @@ const pagesSelection = view(Inputs.checkbox(
 return {panel2Options,panel2InitialValue,pagesSelection};
 }});
 
-define({id: "8b85de4f", inputs: ["pagesSelection","hisco_dn_pages_filtered","activeColors","dn_pages_filtered","margins","html","chartWidth","chartHeight","Plot","globalXDomain","greyscaleMode","linePatterns","rule1906","label1906","sharePanel","downloadChartAsPNG","downloadCSV","downloadBibTeX","downloadAll","display"], body: (pagesSelection,hisco_dn_pages_filtered,activeColors,dn_pages_filtered,margins,html,chartWidth,chartHeight,Plot,globalXDomain,greyscaleMode,linePatterns,rule1906,label1906,sharePanel,downloadChartAsPNG,downloadCSV,downloadBibTeX,downloadAll,display) => {
+define({id: "2fb30ee4", inputs: ["pagesSelection","hisco_dn_pages_filtered","activeColors","hisco_kb_pages_filtered","dn_pages_filtered","margins","html","chartWidth","chartHeight","Plot","globalXDomain","greyscaleMode","linePatterns","rule1906","label1906","sharePanel","downloadChartAsPNG","downloadCSV","downloadBibTeX","downloadAll","display"], body: (pagesSelection,hisco_dn_pages_filtered,activeColors,hisco_kb_pages_filtered,dn_pages_filtered,margins,html,chartWidth,chartHeight,Plot,globalXDomain,greyscaleMode,linePatterns,rule1906,label1906,sharePanel,downloadChartAsPNG,downloadCSV,downloadBibTeX,downloadAll,display) => {
 if (pagesSelection.length > 0) {
   const leftAxisSeries = pagesSelection.filter(s => s.axis === "left");
   const rightAxisSeries = pagesSelection.filter(s => s.axis === "right");
@@ -1061,9 +1077,17 @@ if (pagesSelection.length > 0) {
       leftData.push(...hisco_dn_pages_filtered.map(d => ({
         year: d.year,
         value: d.pages,
-        series: "Digitized Pages",
+        series: "Dagens Nyheter",
         seriesId: "digitized_pages",
         color: activeColors.digitized_pages
+      })));
+    } else if (series.id === "kb_digitized_pages") {
+      leftData.push(...hisco_kb_pages_filtered.map(d => ({
+        year: d.year,
+        value: d.pages,
+        series: "Digitized Pages (KB)",
+        seriesId: "kb_digitized_pages",
+        color: activeColors.kb_digitized_pages
       })));
     }
   });
@@ -1075,7 +1099,7 @@ if (pagesSelection.length > 0) {
       rightData.push(...dn_pages_filtered.map(d => ({
         year: d.year,
         value: d.pages_min,
-        series: "Page Count (Min)",
+        series: "Page Count DN (Min)",
         seriesId: "page_count_min",
         color: activeColors.page_count_min
       })));
@@ -1083,7 +1107,7 @@ if (pagesSelection.length > 0) {
       rightData.push(...dn_pages_filtered.map(d => ({
         year: d.year,
         value: d.pages_max,
-        series: "Page Count (Max)",
+        series: "Page Count DN (Max)",
         seriesId: "page_count_max",
         color: activeColors.page_count_max
       })));
@@ -1471,17 +1495,17 @@ if (circulationPriceSelection.length > 0) {
 <main id="observablehq-main" class="observablehq">
 <h1 id="jadb-interactive-timelines" tabindex="-1"><a class="observablehq-header-anchor" href="#jadb-interactive-timelines">JADB: Interactive Timelines</a></h1>
 <h2 id="disclaimer" tabindex="-1"><a class="observablehq-header-anchor" href="#disclaimer">Disclaimer</a></h2>
-<p>The data is produced for a <strong>pilot</strong> project researching the
-economic history the labour market in Sweden, and is highly
-preliminary.</p>
+<p>The data is produced for a <strong>pilot</strong> project researching the economic history
+the labour market in Sweden, and is highly preliminary.</p>
 <div class="observablehq observablehq--block"><!--:970f4173:--></div>
 <div class="observablehq observablehq--block"><!--:0887378b:--></div>
-<div class="observablehq observablehq--block"><!--:d57d8fa4:--></div>
-<hr>
+<div class="observablehq observablehq--block"><!--:c0b5036e:--></div>
 <h2 id="timeline-filter" tabindex="-1"><a class="observablehq-header-anchor" href="#timeline-filter">Timeline Filter</a></h2>
 <p>Select the time range to display (default: 1870-1970):</p>
 <div style="background: #f0f7ff; border-left: 4px solid #4e79a7; padding: 12px; margin: 16px 0; font-size: 0.9em;">
-💡 <strong>Tip:</strong> Use the "🔗 Share Panel" button below each panel to generate a shareable URL that preserves your current selections and jumps directly to that panel.
+💡 <strong>Tip:</strong> Use the "🔗 Share Panel" button below each panel to
+generate a shareable URL that preserves your current selections and jumps
+directly to that panel.
 </div>
 <div class="grid grid-cols-2" style="gap: 2rem;">
 <div>
@@ -1493,27 +1517,24 @@ preliminary.</p>
 </div>
 <div class="observablehq observablehq--block"><!--:66b91651:--></div>
 <div class="observablehq observablehq--block"><!--:6a1d2ba3:--></div>
-<div class="observablehq observablehq--block"><!--:b93b3c9c:--></div>
-<hr>
+<div class="observablehq observablehq--block"><!--:456cde67:--></div>
 <h2 id="download-all-data" tabindex="-1"><a class="observablehq-header-anchor" href="#download-all-data">Download All Data</a></h2>
 <p>Download all visualizations, data, and citations at once:</p>
-<div class="observablehq observablehq--block"><!--:2e800a1e:--></div>
-<hr>
+<div class="observablehq observablehq--block"><!--:103f69e6:--></div>
 <h2 id="visualization" tabindex="-1"><a class="observablehq-header-anchor" href="#visualization">Visualization</a></h2>
-<div class="observablehq observablehq--block"><!--:3e2bba62:--></div>
+<div class="observablehq observablehq--block"><!--:f0cea055:--></div>
 <h3 id="panel1"><a class="observablehq-header-anchor" href="#panel1">Panel 1: Job Ad Hits &amp; Employment</a></h3>
 <p><strong>Select data series:</strong></p>
 <div class="observablehq observablehq--block"><!--:479e3acf:--></div>
 <div class="observablehq observablehq--block"><!--:dca904f9:--></div>
 <h3 id="panel2"><a class="observablehq-header-anchor" href="#panel2">Panel 2: Digitized Pages &amp; Page Count</a></h3>
 <p><strong>Select data series:</strong></p>
-<div class="observablehq observablehq--block"><!--:5fed992d:--></div>
-<div class="observablehq observablehq--block"><!--:8b85de4f:--></div>
+<div class="observablehq observablehq--block"><!--:aa3161e7:--></div>
+<div class="observablehq observablehq--block"><!--:2fb30ee4:--></div>
 <h3 id="panel3"><a class="observablehq-header-anchor" href="#panel3">Panel 3: Circulation &amp; Price</a></h3>
 <p><strong>Select data series:</strong></p>
 <div class="observablehq observablehq--block"><!--:2c70321c:--></div>
 <div class="observablehq observablehq--block"><!--:5da8e4b6:--></div>
-<hr>
 <h2 id="data-notes" tabindex="-1"><a class="observablehq-header-anchor" href="#data-notes">Data Notes</a></h2>
 <ul>
 <li><strong>1906</strong> is marked on all charts - digitization drops sharply after this year</li>
@@ -1526,37 +1547,55 @@ preliminary.</p>
 <h2 id="about-the-data" tabindex="-1"><a class="observablehq-header-anchor" href="#about-the-data">About the Data</a></h2>
 <p>This visualization combines four historical data sources:</p>
 <ol>
-<li><strong>HISCO Job Advertisements</strong> - Job titles from HISCO queried against Dagens Nyheter</li>
-<li><strong>Dagens Nyheter Metadata</strong> - Newspaper metrics from Swedish National Library archives</li>
-<li><strong>Employment Statistics</strong> - Stockholm employment data from Swedish statistical yearbooks</li>
-<li><strong>SCB Population Data</strong> - Historical population statistics for Stockholm city and county</li>
+<li><strong>HISCO Job Advertisements</strong> - Job titles from HISCO queried against Dagens
+Nyheter</li>
+<li><strong>Dagens Nyheter Metadata</strong> - Newspaper metrics from Swedish National
+Library archives</li>
+<li><strong>Employment Statistics</strong> - Stockholm employment data from Swedish
+statistical yearbooks</li>
+<li><strong>SCB Population Data</strong> - Historical population statistics for Stockholm
+city and county</li>
 </ol>
-<p>All data is preliminary and part of a pilot research project on Swedish economic history.</p>
+<p>All data is preliminary and part of a pilot research project on Swedish
+economic history.</p>
 <h2 id="data-sources-and-citations" tabindex="-1"><a class="observablehq-header-anchor" href="#data-sources-and-citations">Data Sources &amp; Citations</a></h2>
 <h3 id="hisco-job-advertisement-data" tabindex="-1"><a class="observablehq-header-anchor" href="#hisco-job-advertisement-data">HISCO Job Advertisement Data</a></h3>
 <p><strong>Original Sources:</strong></p>
 <ul>
-<li><strong>Kungliga biblioteket</strong> (Royal Swedish Library). <em>Svenska tidningar</em>. Available at: <a href="https://tidningar.kb.se/" target="_blank" rel="noopener noreferrer">https://tidningar.kb.se/</a> (Accessed: 2025-10-15)</li>
-<li><strong>SwedPop</strong>. (2022). <em>HISCO Codes and Description</em>. Available at: <a href="https://swedpop.se/wp-content/uploads/2022/07/HISCO-codes-and-description-for-IDS-v2.pdf" target="_blank" rel="noopener noreferrer">https://swedpop.se/wp-content/uploads/2022/07/HISCO-codes-and-description-for-IDS-v2.pdf</a> (Accessed: 2025-10-15)</li>
-<li><strong>Swedish Occupational Titles from CEDAR</strong>, Edvinsson, Sören and Westberg, Annika (2024). Available at: <a href="https://datasets.iisg.amsterdam/dataset.xhtml?persistentId=hdl:10622/KNGX6B" target="_blank" rel="noopener noreferrer">https://datasets.iisg.amsterdam/dataset.xhtml?persistentId=hdl:10622/KNGX6B</a> (Accessed: 2024-07-28)</li>
+<li><strong>Kungliga biblioteket</strong> (Royal Swedish Library). <em>Svenska tidningar</em>.
+Available at: <a href="https://tidningar.kb.se/" target="_blank" rel="noopener noreferrer">https://tidningar.kb.se/</a> (Accessed: 2025-10-15)</li>
+<li><strong>SwedPop</strong>. (2022). <em>HISCO Codes and Description</em>. Available at:
+<a href="https://swedpop.se/wp-content/uploads/2022/07/HISCO-codes-and-description-for-IDS-v2.pdf" target="_blank" rel="noopener noreferrer">https://swedpop.se/wp-content/uploads/2022/07/HISCO-codes-and-description-for-IDS-v2.pdf</a>
+(Accessed: 2025-10-15)</li>
+<li><strong>Swedish Occupational Titles from CEDAR</strong>, Edvinsson, Sören and Westberg,
+Annika (2024). Available at:
+<a href="https://datasets.iisg.amsterdam/dataset.xhtml?persistentId=hdl:10622/KNGX6B" target="_blank" rel="noopener noreferrer">https://datasets.iisg.amsterdam/dataset.xhtml?persistentId=hdl:10622/KNGX6B</a>
+(Accessed: 2024-07-28)</li>
 </ul>
 <p><strong>Data Repository:</strong> <a href="https://github.com/JobAdsData/HISCO_trend_notebook" target="_blank" rel="noopener noreferrer">https://github.com/JobAdsData/HISCO_trend_notebook</a></p>
 <h3 id="dagens-nyheter-metadata" tabindex="-1"><a class="observablehq-header-anchor" href="#dagens-nyheter-metadata">Dagens Nyheter Metadata</a></h3>
 <p><strong>Original Source:</strong></p>
 <ul>
-<li><strong>Nya Lundstedt Dagstidningar</strong>. (2025). <em>Svenska Dagstidningar 1900--2025</em>. Available at: <a href="https://tidning.kb.se/nld/nld/tidning_all?tidnId=4" target="_blank" rel="noopener noreferrer">https://tidning.kb.se/nld/nld/tidning_all?tidnId=4</a> (Accessed: 2025-10-14)</li>
+<li><strong>Nya Lundstedt Dagstidningar</strong>. (2025). <em>Svenska Dagstidningar 1900--2025</em>.
+Available at: <a href="https://tidning.kb.se/nld/nld/tidning_all?tidnId=4" target="_blank" rel="noopener noreferrer">https://tidning.kb.se/nld/nld/tidning_all?tidnId=4</a> (Accessed:
+2025-10-14)</li>
 </ul>
 <p><strong>Data Repository:</strong> <a href="https://github.com/JobAdsData/nyalundstedt_DN" target="_blank" rel="noopener noreferrer">https://github.com/JobAdsData/nyalundstedt_DN</a></p>
 <h3 id="employment-statistics" tabindex="-1"><a class="observablehq-header-anchor" href="#employment-statistics">Employment Statistics</a></h3>
 <p><strong>Original Source:</strong></p>
 <ul>
-<li><strong>Stockholms stads statistiska kontor</strong>. (1924-1961). <em>Statistisk årsbok för Stockholms stad</em>. Stockholm: Stockholms stads statistiska kontor.</li>
+<li><strong>Stockholms stads statistiska kontor</strong>. (1924-1961). <em>Statistisk årsbok för
+Stockholms stad</em>. Stockholm: Stockholms stads statistiska kontor.</li>
 </ul>
 <p><strong>Data Repository:</strong> <a href="https://github.com/JobAdsData/arbetsformedlingen-sthlm" target="_blank" rel="noopener noreferrer">https://github.com/JobAdsData/arbetsformedlingen-sthlm</a></p>
 <h3 id="scb-population-data" tabindex="-1"><a class="observablehq-header-anchor" href="#scb-population-data">SCB Population Data</a></h3>
 <p><strong>Original Source:</strong></p>
 <ul>
-<li><strong>Statistiska centralbyrån</strong>. (1969). <em>Historisk statistik för Sverige: Del 1, Befolkning</em> (Andra upplagan). Stockholm: Statistiska centralbyrån. Available at: <a href="https://share.scb.se/OV9993/Data/Historisk%20statistik/Historisk%20statistik%20f%C3%B6r%20Sverige%201700-1900-tal/Del1-Befolkning-1720-1967.pdf" target="_blank" rel="noopener noreferrer">https://share.scb.se/OV9993/Data/Historisk statistik/Historisk statistik för Sverige 1700-1900-tal/Del1-Befolkning-1720-1967.pdf</a> (Accessed: 2025-10-15)</li>
+<li><strong>Statistiska centralbyrån</strong>. (1969). <em>Historisk statistik för Sverige: Del
+1, Befolkning</em> (Andra upplagan). Stockholm: Statistiska centralbyrån.
+Available at:
+<a href="https://share.scb.se/OV9993/Data/Historisk%20statistik/Historisk%20statistik%20f%C3%B6r%20Sverige%201700-1900-tal/Del1-Befolkning-1720-1967.pdf" target="_blank" rel="noopener noreferrer">https://share.scb.se/OV9993/Data/Historisk statistik/Historisk statistik för Sverige 1700-1900-tal/Del1-Befolkning-1720-1967.pdf</a>
+(Accessed: 2025-10-15)</li>
 </ul>
 <p><strong>Data Repository:</strong> <a href="https://github.com/JobAdsData/scb-befolkning-sthlm" target="_blank" rel="noopener noreferrer">https://github.com/JobAdsData/scb-befolkning-sthlm</a></p>
 </main>
